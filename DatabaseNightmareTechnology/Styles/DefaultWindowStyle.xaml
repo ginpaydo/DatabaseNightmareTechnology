@@ -1,0 +1,59 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Windowの共通の見た目のカスタマイズ -->
+    <Style x:Key="DefaultWindowStyle" TargetType="Window">
+        <!-- Templateを差し替えて見た目をごっそり差し替える -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+                    <!-- 外枠の太さ -->
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <!-- 子要素の大きさに合わせる（ここでは文字の高さ） -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- 残りの部分 -->
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- ヘッダー部 -->
+                        <Grid Grid.Row="0">
+                            <!-- 背景色 -->
+                            <Grid.Background>
+                                <!-- グラデーション(それぞれのx,yを定義) -->
+                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                    <!-- 左 -->
+                                    <GradientStop Color="#FF896CFF" Offset="0" />
+                                    <!-- 右 -->
+                                    <GradientStop Color="#FF210096" Offset="1" />
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <!-- 共通で使用するボタンを置く 右から横に並べる -->
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                                <!-- アプリケーションのタイトル -->
+                                <TextBlock
+                                Text="DatabaseNightmareTechnology"
+                                Foreground="White"
+                                FontWeight="Bold"
+                                FontSize="24"
+                                Margin="5"/>
+                                <!-- 共通で使用するボタンを置く 右から横に並べる -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                                    <Button MinWidth="50" Content="Home" Command="{Binding ToHome}" Margin="2"/>
+                                    <Button MinWidth="50" Content="Dropbox設定" Command="{Binding ToDropboxSettings}" Margin="2"/>
+                                    <Button MinWidth="50" Content="接続先登録" Command="{Binding ToConnectionRegister}" Margin="2"/>
+                                    <Button MinWidth="50" Content="生成" Command="{Binding ToGenerate}" Margin="2"/>
+                                    <Button MinWidth="50" Content="出力結果" Command="{Binding ToOutputResult}" Margin="2"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <!-- コンテンツ部分 -->
+                        <Border Grid.Row="1" Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
