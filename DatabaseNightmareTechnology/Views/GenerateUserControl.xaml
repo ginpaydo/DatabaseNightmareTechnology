@@ -17,21 +17,21 @@
     </i:Interaction.Triggers>
     <Grid>
         <StackPanel Margin="10">
-            <Label Content="生成" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="22" FontWeight="Bold"/>
+            <Label Content="生成" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
 
             <DockPanel Margin="0,0,10,0">
-                <Label Content="接続先：" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <ComboBox Name="DataList" ItemsSource="{Binding DataList}" IsSynchronizedWithCurrentItem="True" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="接続先：" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
+                <ComboBox Name="DataList" ItemsSource="{Binding DataList}" IsSynchronizedWithCurrentItem="True" VerticalContentAlignment="Center"/>
             </DockPanel>
             <DockPanel Margin="0,20,10,0">
-                <Label Content="生成メタデータファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="生成メタデータファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}" VerticalContentAlignment="Center"/>
             </DockPanel>
             <TextBlock>※後で実装</TextBlock>
             <TextBlock>任意の名前と値の組み合わせリストを定義して、汎用性を高める。</TextBlock>
             <TextBlock>プロジェクト名、ネームスペース、パッケージ名などなど</TextBlock>
-            <Button Content="生成" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="10,20,0,0" VerticalAlignment="Top" Width="76" FontFamily="Meiryo UI"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
+            <Button Content="生成" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="10,20,0,0" VerticalAlignment="Top"/>
+            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top"/>
         </StackPanel>
     </Grid>
 </UserControl>

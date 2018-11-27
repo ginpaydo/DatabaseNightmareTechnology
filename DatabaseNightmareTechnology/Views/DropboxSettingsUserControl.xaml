@@ -22,34 +22,34 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel Margin="10">
-            <Label Content="設定" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="22" FontWeight="Bold"/>
-            <Label Content="★利用する方にチェックしてくれ" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="設定" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
+            <Label Content="★利用する方にチェックしてくれ" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal">
-                <RadioButton Content="Dropbox" FontFamily="Meiryo UI" Margin="0,0,0,0" GroupName="Dropbox" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Dropbox}"/>
-                <RadioButton Content="ローカル" FontFamily="Meiryo UI" Margin="20,0,0,0" GroupName="Local" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Local}"/>
+                <RadioButton Content="Dropbox" Margin="0,0,0,0" GroupName="Dropbox" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Dropbox}"/>
+                <RadioButton Content="ローカル" Margin="20,0,0,0" GroupName="Local" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Local}"/>
             </StackPanel>
-            <Label Content="■ローカル" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="■ローカル" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
             <DockPanel Margin="0,0,10,0">
-                <Label Content="使用ディレクトリ：" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding LocalDirectory.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="使用ディレクトリ：" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
+                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding LocalDirectory.Value}" VerticalContentAlignment="Center"/>
             </DockPanel>
-            <Label Content="※Dropboxの場合、保存場所は↓ここで固定だからな。覚悟して使えよ。" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-            <Label Content="Dropbox/アプリ/BestNox/" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-            <Label Content="■Dropbox" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="※Dropboxの場合、保存場所は↓ここで固定だからな。覚悟して使えよ。" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
+            <Label Content="Dropbox/アプリ/BestNox/" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
+            <Label Content="■Dropbox" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
             <DockPanel Margin="0,0,10,0">
-                <Label Content="Access Token：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding AccessToken.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="Access Token：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding AccessToken.Value}" VerticalContentAlignment="Center"/>
             </DockPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="お前がDropboxに登録している名前：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <Label Content="{Binding UserName.Value}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
+                <Label Content="お前がDropboxに登録している名前：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                <Label Content="{Binding UserName.Value}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="お前のメールアドレス：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
-                <Label Content="{Binding Email.Value}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
+                <Label Content="お前のメールアドレス：" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                <Label Content="{Binding Email.Value}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             </StackPanel>
-            <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" Width="76" FontFamily="Meiryo UI"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
+            <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right"/>
+            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top"/>
         </StackPanel>
 
     </Grid>

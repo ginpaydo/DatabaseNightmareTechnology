@@ -9,7 +9,10 @@
              xmlns:c="clr-namespace:DatabaseNightmareTechnology"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
     <i:Interaction.Triggers>
         <!-- 画面が表示されたときの処理 -->
         <i:EventTrigger EventName="Loaded">
@@ -22,70 +25,70 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel Margin="10">
-            <Label Content="接続先登録" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="22" FontWeight="Bold"/>
-            <Label Content="■データベースの情報" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="接続先登録" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"  FontSize="22" FontWeight="Bold"/>
+            <Label Content="■データベースの情報" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"  FontSize="14" FontWeight="Bold"/>
             <DockPanel>
-                <Label Content="データベースの種類：" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
-                <RadioButton Content="MySQLまたはMariaDB" FontFamily="Meiryo UI" Margin="0,0,0,0" GroupName="MariaDB" VerticalAlignment="Center" IsChecked="{Binding DatabaseEngine.Value, Converter={StaticResource DatabaseEngine}, ConverterParameter=MariaDB}"/>
-                <RadioButton Content="SQL Server" FontFamily="Meiryo UI" Margin="20,0,0,0" GroupName="SqlServer" VerticalAlignment="Center" IsChecked="{Binding DatabaseEngine.Value, Converter={StaticResource DatabaseEngine}, ConverterParameter=SqlServer}"/>
+                <Label Content="データベースの種類：" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                <RadioButton Content="MySQLまたはMariaDB"  Margin="0,0,0,0" GroupName="MariaDB" VerticalAlignment="Center" IsChecked="{Binding DatabaseEngine.Value, Converter={StaticResource DatabaseEngine}, ConverterParameter=MariaDB}"/>
+                <RadioButton Content="SQL Server"  Margin="20,0,0,0" GroupName="SqlServer" VerticalAlignment="Center" IsChecked="{Binding DatabaseEngine.Value, Converter={StaticResource DatabaseEngine}, ConverterParameter=SqlServer}"/>
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
-                <Label Content="タイトル（ファイル名）：" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding Title.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="タイトル（ファイル名）：" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding Title.Value}"  VerticalContentAlignment="Center"/>
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
-                <Label Content="ホスト：" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Width="180" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Host.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
-                <Label Content="ポート番号（環境により空欄可）：" HorizontalAlignment="Left" Margin="20,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Width="50" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Port.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
-                <Label Content="データベース名：" HorizontalAlignment="Left" Margin="20,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DbName.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
+                <Label Content="ホスト：" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                <TextBox Width="180" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Host.Value}"  VerticalContentAlignment="Center"/>
+                <Label Content="ポート番号（環境により空欄可）：" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                <TextBox Width="50" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Port.Value}"  VerticalContentAlignment="Center"/>
+                <Label Content="データベース名：" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DbName.Value}"  VerticalContentAlignment="Center"/>
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
-                <Label Content="アカウント：" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Account.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
-                <Label Content="パスワード：" HorizontalAlignment="Left" Margin="20,0,0,0" FontFamily="Meiryo UI"/>
-                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Password.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center"/>
-                <Label Content="※平文表示するので開発用DB以外入力しないこと" HorizontalAlignment="Left" Margin="20,0,0,0" FontFamily="Meiryo UI"/>
+                <Label Content="アカウント：" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Account.Value}"  VerticalContentAlignment="Center"/>
+                <Label Content="パスワード：" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                <TextBox Width="120" Margin="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Password.Value}"  VerticalContentAlignment="Center"/>
+                <Label Content="※平文表示するので開発用DB以外入力しないこと" HorizontalAlignment="Left" Margin="20,0,0,0" />
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
-                    <StackPanel Margin="10,0,0,10" Width="260" HorizontalAlignment="Left">
-                        <Label Content="生成の際にテーブル名から除外するプレフィクス" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
+                    <StackPanel Margin="10,0,0,10" Width="300" HorizontalAlignment="Left">
+                        <Label Content="生成の際にテーブル名から除外するプレフィクス" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <DockPanel Margin="0,0,0,0">
                             <ListBox Width ="100" Height="100" Name="PrefixList" ItemsSource="{Binding PrefixList}" IsSynchronizedWithCurrentItem="True"/>
                             <StackPanel>
-                                <DockPanel>
-                                    <TextBox Width="100" Height="24" Margin="10,0,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding InputPrefix.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center" VerticalAlignment="Bottom"/>
-                                    <Button Content="追加" Command="{Binding AddPrefix}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="40" Height="24" FontFamily="Meiryo UI"/>
+                                <DockPanel HorizontalAlignment="Right">
+                                    <TextBox Width="120" Height="24" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding InputPrefix.Value}"  VerticalContentAlignment="Center" VerticalAlignment="Bottom"/>
+                                    <Button Content="追加" Command="{Binding AddPrefix}" HorizontalAlignment="Left" Margin="0,0,10,0" VerticalAlignment="Bottom" Height="24" />
                                 </DockPanel>
-                                <Button Content="削除" Margin="0,52,10,0" Command="{Binding DeletePrefix}" CommandParameter="{Binding ElementName=PrefixList, Path=SelectedItem}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="40" Height="24" FontFamily="Meiryo UI"/>
+                                <Button Content="削除" Margin="0,52,10,0" Command="{Binding DeletePrefix}" CommandParameter="{Binding ElementName=PrefixList, Path=SelectedItem}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="24" />
                             </StackPanel>
                         </DockPanel>
                     </StackPanel>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top">
-                    <StackPanel Margin="10,0,0,10" Width="260" HorizontalAlignment="Left">
-                        <Label Content="共通カラム名" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI"/>
-                        <DockPanel Margin="0,0,0,0">
+                    <StackPanel Margin="10,0,0,10" Width="300" HorizontalAlignment="Left">
+                        <Label Content="共通カラム名" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                        <DockPanel>
                             <ListBox Width ="100" Height="100" Name="CommonColumnList" ItemsSource="{Binding CommonColumnList}" IsSynchronizedWithCurrentItem="True"/>
                             <StackPanel>
-                                <DockPanel Margin="0,0,0,0">
-                                    <TextBox Width="100" Height="24" Margin="10,0,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding InputCommonColumn.Value}" FontFamily="Meiryo UI" VerticalContentAlignment="Center" VerticalAlignment="Bottom"/>
-                                    <Button Content="追加" Command="{Binding AddCommonColumn}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="40" Height="24" FontFamily="Meiryo UI"/>
+                                <DockPanel HorizontalAlignment="Right">
+                                    <TextBox Width="120" Height="24" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding InputCommonColumn.Value}"  VerticalContentAlignment="Center" VerticalAlignment="Bottom"/>
+                                    <Button Content="追加" Command="{Binding AddCommonColumn}" HorizontalAlignment="Left" Margin="0,0,10,0" VerticalAlignment="Bottom" Height="24" />
                                 </DockPanel>
-                                <Button Content="削除" Margin="0,52,10,0" Command="{Binding DeleteCommonColumn}"  CommandParameter="{Binding ElementName=CommonColumnList, Path=SelectedItem}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="40" Height="24" FontFamily="Meiryo UI"/>
+                                <Button Content="削除" Margin="0,52,10,0" Command="{Binding DeleteCommonColumn}"  CommandParameter="{Binding ElementName=CommonColumnList, Path=SelectedItem}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="24" />
                             </StackPanel>
                         </DockPanel>
                     </StackPanel>
                 </Border>
             </DockPanel>
-            <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" Width="76" FontFamily="Meiryo UI"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" FontFamily="Meiryo UI"/>
+            <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" />
             <DockPanel Margin="0,0,0,0">
-                <Label Content="接続文字列：" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI" VerticalAlignment="Bottom"/>
-                <Label Content="{Binding ConnectionString.Value}" HorizontalAlignment="Left" Margin="0,0,0,0" FontFamily="Meiryo UI" VerticalAlignment="Bottom"/>
+                <Label Content="接続文字列：" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>
+                <Label Content="{Binding ConnectionString.Value}" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>
             </DockPanel>
         </StackPanel>
     </Grid>

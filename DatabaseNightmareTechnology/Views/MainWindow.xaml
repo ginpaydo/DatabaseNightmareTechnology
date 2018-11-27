@@ -3,16 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title.Value}" Height="600" Width="800"
-        Style="{Binding Source={StaticResource DefaultWindowStyle}}">
+        Title="{Binding Title.Value}" Height="600" Width="800">
     <i:Interaction.Triggers>
         <!-- 画面が表示されたときの初期処理イベント -->
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ToHome}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        <Grid.RowDefinitions>
+            <!-- 子要素の大きさに合わせる（ここでは文字の高さ） -->
+            <RowDefinition Height="Auto"/>
+            <!-- 残りの部分 -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- ヘッダー部 -->
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <!-- アプリケーションのタイトル -->
+                <DockPanel>
+                    <materialDesign:ColorZone Mode="PrimaryLight" Padding="8">
+                        <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">Database Nightmare Technology</TextBlock>
+                    </materialDesign:ColorZone>
+                </DockPanel>
+                <!-- メニュー -->
+                <DockPanel>
+                    <Menu IsMainMenu="True">
+                        <MenuItem Header="_Home" Command="{Binding ToHome}"/>
+                        <MenuItem Header="_Dropbox設定" Command="{Binding ToDropboxSettings}"/>
+                        <MenuItem Header="_接続先登録" Command="{Binding ToConnectionRegister}"/>
+                        <MenuItem Header="_生成" Command="{Binding ToGenerate}"/>
+                        <MenuItem Header="_出力結果" Command="{Binding ToOutputResult}"/>
+                    </Menu>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+        <!-- コンテンツ部分 -->
+        <Grid Grid.Row="1">
+            <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        </Grid>
     </Grid>
 </Window>

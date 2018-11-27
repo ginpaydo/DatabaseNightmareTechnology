@@ -98,10 +98,6 @@
     <Compile Include="Views\OutputResultUserControl.xaml.cs">
       <DependentUpon>OutputResultUserControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="Styles\DefaultWindowStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\ConnectionRegisterUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +161,12 @@
   <ItemGroup>
     <PackageReference Include="Dropbox.Api">
       <Version>4.9.2</Version>
+    </PackageReference>
+    <PackageReference Include="MaterialDesignColors">
+      <Version>1.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="MaterialDesignThemes">
+      <Version>2.5.0.1205</Version>
     </PackageReference>
     <PackageReference Include="MySql.Data">
       <Version>8.0.13</Version>

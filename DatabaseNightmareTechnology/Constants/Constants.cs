@@ -8,7 +8,7 @@
         /// <summary>
         /// アプリケーションタイトル
         /// </summary>
-        public const string Title = "データベース情報収集ツール";
+        public const string Title = "DatabaseNightmareTechnology";
 
         /// <summary>
         /// 各画面表示領域名
