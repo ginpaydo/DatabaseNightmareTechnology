@@ -78,6 +78,12 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public bool IsNullable { get; set; }
 
+        /// <summary>
+        /// 他のテーブルのIDだったら、そのクラス名を入れる
+        /// 例：user_auth -> UserAuth
+        /// </summary>
+        public string IndexClass { get; set; }
+
     }
 
 }
