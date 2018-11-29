@@ -120,11 +120,24 @@ namespace DatabaseNightmareTechnology.Models
                         {
                             var columns = new List<Column>();
                             var table = new Table();
+
                             // テーブル名
                             table.RawName = tableRow[cName].ToString();
                             table.Name = GetTableName(connectionData, table.RawName);
                             table.NameCamel = table.Name.SnakeToLowerCamel();
                             table.NamePascal = table.Name.SnakeToUpperCamel();
+
+                            // インデックス情報を取得
+                            var indexList = new List<string>();
+                            var indexData = ExecuteQuery(connection, $"SHOW INDEX FROM {table.RawName};");
+                            foreach (DataRow row in indexData.Rows)
+                            {
+                                var cn = row["Column_name"].ToString();
+                                if (!indexList.Contains(cn))
+                                {
+                                    indexList.Add(cn);
+                                }
+                            }
 
                             // 各テーブルコメント
                             var tableCommentData = ExecuteQuery(connection, $"show table status like '{table.RawName}'");
@@ -159,6 +172,27 @@ namespace DatabaseNightmareTechnology.Models
                                 }
 
                                 columns.Add(column);
+                            }
+                            // インデックス情報を設定
+                            foreach (var item in columns)
+                            {
+                                // インデックスリストにそのカラム名があるか
+                                if (indexList.Contains(item.Name))
+                                {
+                                    item.IndexClass = item.Name;
+                                    if (table.KeyName != null)
+                                    {
+                                        var end = $"_{table.KeyName}";
+                                        if (item.Name.EndsWith(end))
+                                        {
+                                            item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    item.IndexClass = null;
+                                }
                             }
                             table.Columns = columns;
                             tables.Add(table);
@@ -270,10 +304,13 @@ namespace DatabaseNightmareTechnology.Models
                                 if (indexList[table.RawName].Contains(item.Name))
                                 {
                                     item.IndexClass = item.Name;
-                                    var end = $"_{table.KeyName}";
-                                    if (item.Name.EndsWith(end))
+                                    if (table.KeyName != null)
                                     {
-                                        item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length);
+                                        var end = $"_{table.KeyName}";
+                                        if (item.Name.EndsWith(end))
+                                        {
+                                            item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length);
+                                        }
                                     }
                                 }
                                 else

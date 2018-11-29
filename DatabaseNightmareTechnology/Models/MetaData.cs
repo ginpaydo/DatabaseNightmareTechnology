@@ -22,7 +22,13 @@ namespace DatabaseNightmareTechnology.Models
     class Table
     {
         public List<Column> Columns { get; set; }
+        /// <summary>
+        /// プレフィクス付きの名前
+        /// </summary>
         public string RawName { get; set; }
+        /// <summary>
+        /// プレフィクスを取った名前
+        /// </summary>
         public string Name { get; set; }
         public string NameCamel { get; set; }
         public string NamePascal { get; set; }
