@@ -249,7 +249,7 @@ namespace DatabaseNightmareTechnology.Models
                     if (!String.IsNullOrWhiteSpace(Title))
                     {
                         // OKならDropboxかローカルに保存
-                        await Json.MultiSaveAsync(SaveData.DataOutput, $"{Title}.dat", ConnectionSettingData, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
+                        await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{Title}.dat", ConnectionSettingData, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
 
                         CheckResult = "チェックOK、保存したぜ";
                     }

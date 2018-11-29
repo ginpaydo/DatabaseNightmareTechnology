@@ -15,8 +15,6 @@ namespace DatabaseNightmareTechnology.Models
         /// テーブル
         /// </summary>
         public List<Table> Tables { get; set; }
-
-        // TODO:ユニーク制約などを追加する
     }
 
     class Table

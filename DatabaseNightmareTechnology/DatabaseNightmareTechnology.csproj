@@ -65,6 +65,7 @@
     <Compile Include="Enums\DataOutput.cs" />
     <Compile Include="Enums\DatabaseEngine.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
+    <Compile Include="Helpers\DropboxHelper.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NLogLogger.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />

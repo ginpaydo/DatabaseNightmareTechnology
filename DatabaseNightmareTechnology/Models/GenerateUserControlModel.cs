@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    // TODO:id以外で、インデックスに使用されているカラムは外部参照リストに加えておく
     class GenerateUserControlModel : BindableBase
     {
         #region Fields
@@ -86,7 +85,7 @@ namespace DatabaseNightmareTechnology.Models
             #endregion
 
             // 対象のデータを取得
-            ConnectionSettingData connectionData = await Json.LoadMultiData<ConnectionSettingData>(
+            ConnectionSettingData connectionData = await DropboxHelper.MultiLoadAsync<ConnectionSettingData>(
                 SaveData.DataOutput, value,
                 Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory,
                 SaveData.LocalDirectory + Constants.ConnectionDirectory,
@@ -328,7 +327,7 @@ namespace DatabaseNightmareTechnology.Models
             }
 
             // Dropboxかローカルに保存
-            await Json.MultiSaveAsync(SaveData.DataOutput, $"{FileName}.dat", MetaData, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
+            await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}.dat", MetaData, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
             CheckResult = $"保存できたぜ。よかったな！";
         }
 
@@ -445,7 +444,7 @@ namespace DatabaseNightmareTechnology.Models
             }
 
             // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
-            await Json.GetFileList(DataList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
+            await DropboxHelper.GetFileListAsync(DataList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
 
         }
         #endregion
