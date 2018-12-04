@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    class OutputResultUserControlModel : BindableBase
+    class GeneralInputUserControlModel : BindableBase
     {
-
         #region Fields
-        private string body;
+
+        private string fileName;
         /// <summary>
-        /// テンプレート本体
+        /// 生成ファイル名(Razor可)
         /// </summary>
-        public string Body
+        public string FileName
         {
-            get { return body; }
-            set { SetProperty(ref body, value); }
+            get { return fileName; }
+            set { SetProperty(ref fileName, value); }
         }
 
         private string saveResult;
         /// <summary>
-        /// 保存結果
+        /// テンプレートファイル名
         /// </summary>
         public string SaveResult
         {
@@ -33,18 +33,25 @@ namespace DatabaseNightmareTechnology.Models
         }
 
         /// <summary>
-        /// ディレクトリリスト
-        /// </summary>
-        public ObservableCollection<string> DirectoryList { get; } = new ObservableCollection<string>();
-
-        /// <summary>
         /// ファイルリスト
         /// </summary>
         public ObservableCollection<string> FileList { get; } = new ObservableCollection<string>();
 
+        /// <summary>
+        /// パラメータと値リスト
+        /// TODO:独自クラスになるはず
+        /// </summary>
+        public ObservableCollection<string> Items { get; } = new ObservableCollection<string>();
         #endregion
 
         #region ボタン
+        /// <summary>
+        /// 保存ボタン処理
+        /// </summary>
+        /// <returns></returns>
+        public async Task Save()
+        {
+        }
 
         /// <summary>
         /// 削除
@@ -65,12 +72,4 @@ namespace DatabaseNightmareTechnology.Models
         }
         #endregion
     }
-    //// ファイルを削除
-    //// "text1.txt"
-    //await _client.Files.DeleteV2Async("/Temp/sample/text1.txt");
-
-    //// "text2.txt"
-    //await _client.Files.DeleteV2Async("/Temp/sample/text2.txt");
-    //// 接続先データ読み込み（ディレクトリのファイル一覧を取得）
-    //await Json.GetFileList(DataList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
 }

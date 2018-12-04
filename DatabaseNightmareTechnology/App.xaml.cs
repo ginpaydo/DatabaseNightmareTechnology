@@ -34,6 +34,9 @@ namespace DatabaseNightmareTechnology
             containerRegistry.RegisterForNavigation<DropboxSettingsUserControl>();
             containerRegistry.RegisterForNavigation<ConnectionRegisterUserControl>();
             containerRegistry.RegisterForNavigation<GenerateUserControl>();
+            containerRegistry.RegisterForNavigation<TemplateEditUserControl>();
+            containerRegistry.RegisterForNavigation<GeneralInputUserControl>();
+            containerRegistry.RegisterForNavigation<SourceGenerateUserControl>();
             containerRegistry.RegisterForNavigation<OutputResultUserControl>();
 
             // ログを出力する

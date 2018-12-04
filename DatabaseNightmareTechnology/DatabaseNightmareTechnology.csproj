@@ -76,8 +76,14 @@
     <Compile Include="Models\HomeUserControlModel.cs" />
     <Compile Include="Models\MainWindowModel.cs" />
     <Compile Include="Models\MetaData.cs" />
+    <Compile Include="Models\SourceGenerateUserControlModel.cs" />
+    <Compile Include="Models\GeneralInputUserControlModel.cs" />
+    <Compile Include="Models\TemplateEditUserControlModel.cs" />
     <Compile Include="Models\OutputResultUserControlModel.cs" />
     <Compile Include="Models\SaveData.cs" />
+    <Compile Include="ViewModels\GeneralInputUserControlViewModel.cs" />
+    <Compile Include="ViewModels\SourceGenerateUserControlViewModel.cs" />
+    <Compile Include="ViewModels\TemplateEditUserControlViewModel.cs" />
     <Compile Include="ViewModels\OutputResultUserControlViewModel.cs" />
     <Compile Include="ViewModels\GenerateUserControlViewModel.cs" />
     <Compile Include="ViewModels\ConnectionRegisterUserControlViewModel.cs" />
@@ -90,6 +96,9 @@
     <Compile Include="Views\DropboxSettingsUserControl.xaml.cs">
       <DependentUpon>DropboxSettingsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GeneralInputUserControl.xaml.cs">
+      <DependentUpon>GeneralInputUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GenerateUserControl.xaml.cs">
       <DependentUpon>GenerateUserControl.xaml</DependentUpon>
     </Compile>
@@ -99,11 +108,21 @@
     <Compile Include="Views\OutputResultUserControl.xaml.cs">
       <DependentUpon>OutputResultUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SourceGenerateUserControl.xaml.cs">
+      <DependentUpon>SourceGenerateUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TemplateEditUserControl.xaml.cs">
+      <DependentUpon>TemplateEditUserControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\ConnectionRegisterUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DropboxSettingsUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GeneralInputUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,6 +148,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\OutputResultUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SourceGenerateUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TemplateEditUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,7 +1,6 @@
 ﻿using DatabaseNightmareTechnology.Models;
 using Prism.Logging;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,30 +10,32 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
-    class OutputResultUserControlViewModel : ViewModelBase
+    class SourceGenerateUserControlViewModel : ViewModelBase
     {
         /// <summary>
         /// POCO
         /// </summary>
-        private OutputResultUserControlModel Model;
+        private SourceGenerateUserControlModel Model;
 
         #region ReactiveProperty
 
         /// <summary>
-        /// ディレクトリ
+        /// テンプレートリスト
         /// </summary>
-        public ReadOnlyReactiveCollection<string> DirectoryList { get; private set; }
+        public ReadOnlyReactiveCollection<string> TemplateList { get; private set; }
 
         /// <summary>
-        /// ファイル
+        /// データベース情報
+        /// 選択しない場合、汎用入力による単発生成
         /// </summary>
-        public ReadOnlyReactiveCollection<string> FileList { get; private set; }
+        public ReadOnlyReactiveCollection<string> ConnectionList { get; private set; }
 
         /// <summary>
-        /// 保存結果
+        /// 汎用データ（任意）
+        /// リストデータは、名前に共通のプレフィクスを付ける。
+        /// リスト名#データ名('data#Field1')
         /// </summary>
-        public ReactiveProperty<string> Body { get; }
-
+        public ReadOnlyReactiveCollection<string> GeneralList { get; private set; }
         #endregion
 
         #region Command
@@ -46,24 +47,23 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// 削除ボタン処理
         /// </summary>
         public ReactiveCommand Delete { get; }
+        /// <summary>
+        /// チェック＆保存ボタン処理
+        /// </summary>
+        public ReactiveCommand Save { get; }
         #endregion
 
 
-        public OutputResultUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("OutputResultUserControlViewModel", loggerFacade)
+        public SourceGenerateUserControlViewModel(ILoggerFacade loggerFacade)
+            : base("SourceGenerateUserControlViewModel", loggerFacade)
         {
             // Modelクラスを初期化
-            Model = new OutputResultUserControlModel();
-
-            #region 値の連動設定
-            Body = Model.ToReactivePropertyAsSynchronized(
-                m => m.Body
-                );
-            #endregion
+            Model = new SourceGenerateUserControlModel();
 
             #region リストの連動設定
-            DirectoryList = Model.DirectoryList.ToReadOnlyReactiveCollection();
-            FileList = Model.FileList.ToReadOnlyReactiveCollection();
+            TemplateList = Model.TemplateList.ToReadOnlyReactiveCollection();
+            ConnectionList = Model.ConnectionList.ToReadOnlyReactiveCollection();
+            GeneralList = Model.GeneralList.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -76,6 +76,15 @@ namespace DatabaseNightmareTechnology.ViewModels
                 d =>
                 {
                     Model.Delete(d as string);
+                }
+            );
+
+            Save = new ReactiveCommand(gate);
+            Save.Subscribe(
+                async d =>
+                {
+                    Log.Log($"ファイルを保存", Category.Info, Priority.None);
+                    await Model.Save();
                 }
             );
 

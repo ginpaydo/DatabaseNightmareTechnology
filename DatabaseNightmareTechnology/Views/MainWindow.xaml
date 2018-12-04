@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         prism:ViewModelLocator.AutoWireViewModel="True"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Title.Value}" Height="600" Width="800">
     <i:Interaction.Triggers>
         <!-- 画面が表示されたときの初期処理イベント -->
@@ -36,6 +39,9 @@
                         <MenuItem Header="_Dropbox設定" Command="{Binding ToDropboxSettings}"/>
                         <MenuItem Header="_接続先登録" Command="{Binding ToConnectionRegister}"/>
                         <MenuItem Header="_生成" Command="{Binding ToGenerate}"/>
+                        <MenuItem Header="_テンプレート編集" Command="{Binding ToTemplateEdit}"/>
+                        <MenuItem Header="_ソース生成" Command="{Binding ToGenetalInput}"/>
+                        <MenuItem Header="_汎用入力" Command="{Binding ToSourceGenerate}"/>
                         <MenuItem Header="_出力結果" Command="{Binding ToOutputResult}"/>
                     </Menu>
                 </DockPanel>

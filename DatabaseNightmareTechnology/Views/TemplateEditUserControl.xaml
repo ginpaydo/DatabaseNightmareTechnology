@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="DatabaseNightmareTechnology.Views.TemplateEditUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:DatabaseNightmareTechnology.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Triggers>
+        <!-- 画面が表示されたときの処理 -->
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Activate}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <!-- 画面分割の定義 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="210"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10" Grid.Row="0">
+            <Label Content="テンプレート編集" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
+            <DockPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="ファイル選択：" HorizontalAlignment="Left" Margin="0" VerticalContentAlignment="Center" Grid.Column="0"/>
+                    <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True" VerticalContentAlignment="Center" Grid.Column="1"/>
+                    <Button Content="削除" Command="{Binding Delete}" Style="{StaticResource MaterialDesignRaisedAccentButton}" HorizontalAlignment="Right" Grid.Column="2"/>
+                </Grid>
+            </DockPanel>
+            <DockPanel Margin="0,10,0,0">
+                <Label Content="生成ファイル名(Razor可)：" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                <TextBox Width="200" Text="{Binding GenerateFileName.Value}"/>
+                <Label Content="テンプレートファイル名：" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding Title.Value}"/>
+            </DockPanel>
+            <TextBox Margin="0,10,0,0" Grid.Row="1"
+            Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+            Height="72"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            materialDesign:HintAssist.Hint="説明："
+            Text="{Binding Discription.Value}"/>
+        </StackPanel>
+        <TextBox Margin="10,0,10,0" Grid.Row="1"
+            Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            materialDesign:HintAssist.Hint="テンプレート本体："
+            Text="{Binding TemplateBody.Value}"/>
+        <StackPanel Grid.Row="2">
+            <Button Content="保存" Command="{Binding Save}" CommandParameter="{Binding ElementName=FileList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="0,5,5,5"/>
+            <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

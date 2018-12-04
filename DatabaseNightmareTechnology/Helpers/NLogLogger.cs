@@ -6,6 +6,7 @@ namespace DatabaseNightmareTechnology
 {
     /// <summary>
     /// ログ設定
+    /// ソース固定で良い
     /// </summary>
     public class NLogLogger : ILoggerFacade
     {

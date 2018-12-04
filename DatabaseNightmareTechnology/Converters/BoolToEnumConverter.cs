@@ -7,6 +7,7 @@ namespace DatabaseNightmareTechnology
     /// <summary>
     /// ラジオボタンのバインディングのため
     /// BoolとEnumを変換する
+    /// ソース完全固定
     /// </summary>
     class BoolToEnumConverter : IValueConverter
     {

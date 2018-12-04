@@ -5,6 +5,7 @@ namespace DatabaseNightmareTechnology
 {
     /// <summary>
     /// string 型の拡張メソッドを管理するクラス
+    /// ソース固定で良い
     /// </summary>
     public static class StringExtensions
     {

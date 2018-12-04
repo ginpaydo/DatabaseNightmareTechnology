@@ -31,7 +31,7 @@
         public const string ApplicationDirectoryLocal = "D:" + ApplicationDirectoryDropbox;
 
         /// <summary>
-        /// アプリケーションディレクトリ（Dropbox）
+        /// アプリケーションディレクトリ（共通の相対パス）
         /// </summary>
         public const string ApplicationDirectoryDropbox = "/DNT";
 
@@ -45,10 +45,14 @@
         /// </summary>
         public const string MetaDataDirectory = "/MetaData";
 
+        // 画面名
         public const string HomeUserControl = "HomeUserControl";
         public const string DropboxSettingsUserControl = "DropboxSettingsUserControl";
         public const string ConnectionRegisterUserControl = "ConnectionRegisterUserControl";
         public const string GenerateUserControl = "GenerateUserControl";
+        public const string TemplateEditUserControl = "TemplateEditUserControl";
+        public const string GeneralInputUserControl = "GeneralInputUserControl";
+        public const string SourceGenerateUserControl = "SourceGenerateUserControl";
         public const string OutputResultUserControl = "OutputResultUserControl";
     }
 }

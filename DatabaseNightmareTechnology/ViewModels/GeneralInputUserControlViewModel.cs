@@ -11,30 +11,34 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
-    class OutputResultUserControlViewModel : ViewModelBase
+    class GeneralInputUserControlViewModel : ViewModelBase
     {
         /// <summary>
         /// POCO
         /// </summary>
-        private OutputResultUserControlModel Model;
+        private GeneralInputUserControlModel Model;
 
         #region ReactiveProperty
 
         /// <summary>
-        /// ディレクトリ
+        /// データファイル名
         /// </summary>
-        public ReadOnlyReactiveCollection<string> DirectoryList { get; private set; }
-
-        /// <summary>
-        /// ファイル
-        /// </summary>
-        public ReadOnlyReactiveCollection<string> FileList { get; private set; }
+        public ReactiveProperty<string> FileName { get; }
 
         /// <summary>
         /// 保存結果
         /// </summary>
-        public ReactiveProperty<string> Body { get; }
+        public ReactiveProperty<string> SaveResult { get; }
 
+        /// <summary>
+        /// ファイルリスト
+        /// </summary>
+        public ReadOnlyReactiveCollection<string> FileList { get; private set; }
+
+        /// <summary>
+        /// 汎用入力リスト
+        /// </summary>
+        public ReadOnlyReactiveCollection<string> Items { get; private set; }
         #endregion
 
         #region Command
@@ -46,24 +50,30 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// 削除ボタン処理
         /// </summary>
         public ReactiveCommand Delete { get; }
+        /// <summary>
+        /// チェック＆保存ボタン処理
+        /// </summary>
+        public ReactiveCommand Save { get; }
         #endregion
 
-
-        public OutputResultUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("OutputResultUserControlViewModel", loggerFacade)
+        public GeneralInputUserControlViewModel(ILoggerFacade loggerFacade)
+            : base("GeneralInputUserControlViewModel", loggerFacade)
         {
             // Modelクラスを初期化
-            Model = new OutputResultUserControlModel();
+            Model = new GeneralInputUserControlModel();
 
             #region 値の連動設定
-            Body = Model.ToReactivePropertyAsSynchronized(
-                m => m.Body
+            FileName = Model.ToReactivePropertyAsSynchronized(
+                m => m.FileName
+                );
+            SaveResult = Model.ToReactivePropertyAsSynchronized(
+                m => m.SaveResult
                 );
             #endregion
 
             #region リストの連動設定
-            DirectoryList = Model.DirectoryList.ToReadOnlyReactiveCollection();
             FileList = Model.FileList.ToReadOnlyReactiveCollection();
+            Items = Model.Items.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -76,6 +86,15 @@ namespace DatabaseNightmareTechnology.ViewModels
                 d =>
                 {
                     Model.Delete(d as string);
+                }
+            );
+
+            Save = new ReactiveCommand(gate);
+            Save.Subscribe(
+                async d =>
+                {
+                    Log.Log($"ファイルを保存", Category.Info, Priority.None);
+                    await Model.Save();
                 }
             );
 

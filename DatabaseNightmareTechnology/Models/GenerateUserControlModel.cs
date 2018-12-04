@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
+    // TODO:データベースの所は気が向いたらリファクタリング
+
     class GenerateUserControlModel : BindableBase
     {
         #region Fields
@@ -53,6 +55,7 @@ namespace DatabaseNightmareTechnology.Models
         public ObservableCollection<string> DataList { get; } = new ObservableCollection<string>();
         #endregion
 
+        #region initialize
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -61,6 +64,7 @@ namespace DatabaseNightmareTechnology.Models
             MetaData = new MetaData();
             CheckResult = "チェック結果";
         }
+        #endregion
 
         #region ボタン
 
@@ -330,7 +334,52 @@ namespace DatabaseNightmareTechnology.Models
             await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}.dat", MetaData, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
             CheckResult = $"保存できたぜ。よかったな！";
         }
+        #endregion
 
+        #region 画面が表示されたときの処理
+        /// <summary>
+        /// 画面が表示されたときの処理
+        /// </summary>
+        /// <returns></returns>
+        public async Task ActivateAsync()
+        {
+            DataList.Clear();
+
+            // データがあるかチェック
+            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
+
+            if (SaveData == null)
+            {
+                // セーブデータがない場合
+                CheckResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
+            }
+
+            // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
+            await DropboxHelper.GetFileListAsync(DataList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
+
+        }
+        #endregion
+
+        #region private
+        /// <summary>
+        /// プレフィクスを取り除く
+        /// </summary>
+        /// <param name="connectionData"></param>
+        /// <param name="rawName"></param>
+        /// <returns></returns>
+        private string GetTableName(ConnectionSettingData connectionData, string rawName)
+        {
+            foreach (var item in connectionData.PrefixList)
+            {
+                if (rawName.StartsWith(item))
+                {
+                    return rawName.Remove(0, item.Length);
+                }
+            }
+            return rawName;
+        }
+
+        #region SQL Server
         /// <summary>
         /// SQL Server
         /// クエリ実行
@@ -342,33 +391,19 @@ namespace DatabaseNightmareTechnology.Models
         {
             SqlCommand com = new SqlCommand(query, connection);
 
-            SqlDataAdapter sda = new SqlDataAdapter();
-            sda.SelectCommand = com;
+            SqlDataAdapter sda = new SqlDataAdapter
+            {
+                SelectCommand = com
+            };
 
             DataSet ds = new DataSet();
             sda.Fill(ds);
 
             return ds.Tables[0];
         }
+        #endregion
 
-        ///// <summary>
-        ///// SQL Server
-        ///// クエリ実行
-        ///// </summary>
-        ///// <param name="connection"></param>
-        ///// <param name="query"></param>
-        ///// <returns></returns>
-        //private SqlDataReader ExecuteQuery(SqlConnection connection, string query)
-        //{
-        //    SqlCommand com = new SqlCommand(query, connection);
-        //    SqlDataReader sdr = com.ExecuteReader();
-
-        //    SqlDataAdapter sda = new SqlDataAdapter();
-        //    sda.SelectCommand
-
-        //    return sdr;
-        //}
-
+        #region MySQL, MariaDB
         /// <summary>
         /// MySQL, MariaDB
         /// クエリ実行
@@ -404,49 +439,9 @@ namespace DatabaseNightmareTechnology.Models
             }
             return length;
         }
-
-        /// <summary>
-        /// プレフィクスを取り除く
-        /// </summary>
-        /// <param name="connectionData"></param>
-        /// <param name="rawName"></param>
-        /// <returns></returns>
-        private string GetTableName(ConnectionSettingData connectionData, string rawName)
-        {
-            foreach (var item in connectionData.PrefixList)
-            {
-                if (rawName.StartsWith(item))
-                {
-                    return rawName.Remove(0, item.Length);
-                }
-            }
-            return rawName;
-        }
+        #endregion
 
         #endregion
 
-        #region 画面が表示されたときの処理
-        /// <summary>
-        /// 画面が表示されたときの処理
-        /// </summary>
-        /// <returns></returns>
-        public async Task ActivateAsync()
-        {
-            DataList.Clear();
-
-            // データがあるかチェック
-            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
-
-            if (SaveData == null)
-            {
-                // セーブデータがない場合
-                CheckResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
-            }
-
-            // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
-            await DropboxHelper.GetFileListAsync(DataList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
-
-        }
-        #endregion
     }
 }

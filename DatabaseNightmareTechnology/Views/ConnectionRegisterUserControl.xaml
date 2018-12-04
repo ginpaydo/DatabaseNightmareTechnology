@@ -10,6 +10,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
@@ -25,8 +26,8 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel Margin="10">
-            <Label Content="接続先登録" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"  FontSize="22" FontWeight="Bold"/>
-            <Label Content="■データベースの情報" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"  FontSize="14" FontWeight="Bold"/>
+            <Label Content="接続先登録" HorizontalAlignment="Left" Margin="0"  FontSize="22" FontWeight="Bold"/>
+            <Label Content="■データベースの情報" HorizontalAlignment="Left" Margin="0,10,0,0"  FontSize="14" FontWeight="Bold"/>
             <DockPanel>
                 <Label Content="データベースの種類：" HorizontalAlignment="Left" Margin="0,0,0,0" />
                 <RadioButton Content="MySQLまたはMariaDB"  Margin="0,0,0,0" GroupName="MariaDB" VerticalAlignment="Center" IsChecked="{Binding DatabaseEngine.Value, Converter={StaticResource DatabaseEngine}, ConverterParameter=MariaDB}"/>
@@ -52,7 +53,7 @@
                 <Label Content="※平文表示するので開発用DB以外入力しないこと" HorizontalAlignment="Left" Margin="20,0,0,0" />
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Margin="10,0,0,10" Width="300" HorizontalAlignment="Left">
                         <Label Content="生成の際にテーブル名から除外するプレフィクス" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <DockPanel Margin="0,0,0,0">
@@ -68,7 +69,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top">
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="10,0,0,0">
                     <StackPanel Margin="10,0,0,10" Width="300" HorizontalAlignment="Left">
                         <Label Content="共通カラム名" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <DockPanel>
@@ -85,7 +86,7 @@
                 </Border>
             </DockPanel>
             <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Top" />
+            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" />
             <DockPanel Margin="0,0,0,0">
                 <Label Content="接続文字列：" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>
                 <Label Content="{Binding ConnectionString.Value}" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>

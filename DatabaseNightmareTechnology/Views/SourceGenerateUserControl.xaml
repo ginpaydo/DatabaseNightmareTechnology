@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="DatabaseNightmareTechnology.Views.GenerateUserControl"
+﻿<UserControl x:Class="DatabaseNightmareTechnology.Views.SourceGenerateUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:DatabaseNightmareTechnology.Views"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -21,16 +21,23 @@
     </i:Interaction.Triggers>
     <Grid>
         <StackPanel Margin="10">
-            <Label Content="データベースからメタデータを生成" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
+            <Label Content="ソース生成" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
 
-            <DockPanel Margin="0,0,10,0">
-                <Label Content="接続先：" HorizontalAlignment="Left" Margin="0"/>
-                <ComboBox Name="DataList" ItemsSource="{Binding DataList}" IsSynchronizedWithCurrentItem="True"/>
+            <DockPanel Margin="0,20,10,0">
+                <Label Content="テンプレート：" HorizontalAlignment="Left" Margin="0"/>
+                <ComboBox Name="TemplateList" ItemsSource="{Binding TemplateList}" IsSynchronizedWithCurrentItem="True"/>
             </DockPanel>
             <DockPanel Margin="0,20,10,0">
-                <Label Content="生成メタデータファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}"/>
+                <Label Content="データベース情報（※）：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <ComboBox Name="ConnectionList" ItemsSource="{Binding ConnectionList}" IsSynchronizedWithCurrentItem="True"/>
             </DockPanel>
+            <Label Content="※選択しない場合、汎用入力による単発生成" HorizontalAlignment="Left" Margin="0"/>
+            <DockPanel Margin="0,20,10,0">
+                <Label Content="汎用データ（任意）：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <ComboBox Name="GeneralList" ItemsSource="{Binding GeneralList}" IsSynchronizedWithCurrentItem="True"/>
+            </DockPanel>
+            <Label Content="リストデータは、名前に共通のプレフィクスを付ける。リスト名#データ名('data#Field1')" HorizontalAlignment="Left" Margin="0"/>
+            <!-- TODO:複数入力なので、CommandParameterをどうするか考えること -->
             <Button Content="生成" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="10,20,0,0"/>
             <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
         </StackPanel>

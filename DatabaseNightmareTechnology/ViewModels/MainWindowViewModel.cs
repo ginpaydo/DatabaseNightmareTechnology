@@ -52,6 +52,18 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// </summary>
         public ReactiveCommand ToGenerate { get; }
         /// <summary>
+        /// テンプレート編集遷移
+        /// </summary>
+        public ReactiveCommand ToTemplateEdit { get; }
+        /// <summary>
+        /// ソース生成遷移
+        /// </summary>
+        public ReactiveCommand ToGenetalInput { get; }
+        /// <summary>
+        /// 汎用データ遷移
+        /// </summary>
+        public ReactiveCommand ToSourceGenerate { get; }
+        /// <summary>
         /// 出力プレビュー遷移
         /// </summary>
         public ReactiveCommand ToOutputResult { get; }
@@ -100,6 +112,27 @@ namespace DatabaseNightmareTechnology.ViewModels
                 d =>
                 {
                     regionManager.RequestNavigate(DefaultRegion, Constants.GenerateUserControl);
+                }
+            );
+            ToTemplateEdit = new ReactiveCommand(gate);
+            ToTemplateEdit.Subscribe(
+                d =>
+                {
+                    regionManager.RequestNavigate(DefaultRegion, Constants.TemplateEditUserControl);
+                }
+            );
+            ToGenetalInput = new ReactiveCommand(gate);
+            ToGenetalInput.Subscribe(
+                d =>
+                {
+                    regionManager.RequestNavigate(DefaultRegion, Constants.GeneralInputUserControl);
+                }
+            );
+            ToSourceGenerate = new ReactiveCommand(gate);
+            ToSourceGenerate.Subscribe(
+                d =>
+                {
+                    regionManager.RequestNavigate(DefaultRegion, Constants.SourceGenerateUserControl);
                 }
             );
             ToOutputResult = new ReactiveCommand(gate);
