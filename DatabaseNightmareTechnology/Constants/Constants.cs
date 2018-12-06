@@ -45,6 +45,26 @@
         /// </summary>
         public const string MetaDataDirectory = "/MetaData";
 
+        /// <summary>
+        /// テンプレート保存ディレクトリ
+        /// </summary>
+        public const string TemplateDirectory = "/Template";
+
+        /// <summary>
+        /// 一般入力データディレクトリ
+        /// </summary>
+        public const string GeneralInputDirectory = "/GeneralInput";
+
+        /// <summary>
+        /// ソース出力ディレクトリ
+        /// </summary>
+        public const string OutputSourceDirectory = "/OutputSource";
+
+        /// <summary>
+        /// ゴミ箱ディレクトリ
+        /// </summary>
+        public const string TrushDirectory = "/Trush";
+
         // 画面名
         public const string HomeUserControl = "HomeUserControl";
         public const string DropboxSettingsUserControl = "DropboxSettingsUserControl";

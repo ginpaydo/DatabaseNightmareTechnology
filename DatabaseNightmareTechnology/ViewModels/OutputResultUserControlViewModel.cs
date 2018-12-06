@@ -31,9 +31,14 @@ namespace DatabaseNightmareTechnology.ViewModels
         public ReadOnlyReactiveCollection<string> FileList { get; private set; }
 
         /// <summary>
-        /// 保存結果
+        /// ファイル内容
         /// </summary>
         public ReactiveProperty<string> Body { get; }
+
+        /// <summary>
+        /// ファイル内容
+        /// </summary>
+        public ReactiveProperty<string> DeleteResult { get; }
 
         #endregion
 
@@ -46,6 +51,14 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// 削除ボタン処理
         /// </summary>
         public ReactiveCommand Delete { get; }
+        /// <summary>
+        /// ディレクトリ選択したときの処理
+        /// </summary>
+        public ReactiveCommand SelectDirectory { get; }
+        /// <summary>
+        /// ファイル選択したときの処理
+        /// </summary>
+        public ReactiveCommand SelectFile { get; }
         #endregion
 
 
@@ -58,6 +71,9 @@ namespace DatabaseNightmareTechnology.ViewModels
             #region 値の連動設定
             Body = Model.ToReactivePropertyAsSynchronized(
                 m => m.Body
+                );
+            DeleteResult = Model.ToReactivePropertyAsSynchronized(
+                m => m.DeleteResult
                 );
             #endregion
 
@@ -73,18 +89,37 @@ namespace DatabaseNightmareTechnology.ViewModels
 
             Delete = new ReactiveCommand(gate);
             Delete.Subscribe(
-                d =>
+                async d =>
                 {
-                    Model.Delete(d as string);
+                    await Model.DeleteAsync(d as string);
                 }
             );
 
             Activate = new ReactiveCommand(gate);
             Activate.Subscribe(
-                async d =>
+                d =>
                 {
                     Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
+                    Model.Activate();
+                }
+            );
+
+            SelectDirectory = new ReactiveCommand(gate);
+            SelectDirectory.Subscribe(
+                async d =>
+                {
+                    await Model.SelectDirectory(d as string);
+                }
+            );
+
+            SelectFile = new ReactiveCommand(gate);
+            SelectFile.Subscribe(
+                async d =>
+                {
+                    if (d != null)
+                    {
+                        await Model.SelectFile(d as string);
+                    }
                 }
             );
             #endregion

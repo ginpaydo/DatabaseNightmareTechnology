@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// メタデータ生成
+    /// </summary>
     class GenerateUserControlViewModel : ViewModelBase
     {
         /// <summary>

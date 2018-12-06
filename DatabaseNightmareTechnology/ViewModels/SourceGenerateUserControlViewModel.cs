@@ -1,6 +1,7 @@
 ﻿using DatabaseNightmareTechnology.Models;
 using Prism.Logging;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,6 +37,11 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// リスト名#データ名('data#Field1')
         /// </summary>
         public ReadOnlyReactiveCollection<string> GeneralList { get; private set; }
+
+        /// <summary>
+        /// 保存結果
+        /// </summary>
+        public ReactiveProperty<string> SaveResult { get; }
         #endregion
 
         #region Command
@@ -59,6 +65,12 @@ namespace DatabaseNightmareTechnology.ViewModels
         {
             // Modelクラスを初期化
             Model = new SourceGenerateUserControlModel();
+
+            #region 値の連動設定
+            SaveResult = Model.ToReactivePropertyAsSynchronized(
+                m => m.SaveResult
+                );
+            #endregion
 
             #region リストの連動設定
             TemplateList = Model.TemplateList.ToReadOnlyReactiveCollection();

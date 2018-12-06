@@ -54,6 +54,7 @@ namespace DatabaseNightmareTechnology
 
         /// <summary>
         /// 指定したディレクトリのファイル一覧を取得する
+        /// ディレクトリがなければ作成する
         /// </summary>
         /// <param name="list">結果を入れるリストの参照（nullの場合リスト作成）</param>
         /// <param name="dataOutput">データ出力モード</param>
@@ -72,8 +73,11 @@ namespace DatabaseNightmareTechnology
             {
                 using (var client = new DropboxClient(accessToken))
                 {
+                    // ディレクトリがなければ作成
+                    await FolderExists(client, dropboxDirectory);
+
                     // ファイルを保存
-                    var result = await client.Files.ListFolderAsync($"{Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory}");
+                    var result = await client.Files.ListFolderAsync($"{dropboxDirectory}");
                     foreach (var item in result.Entries)
                     {
                         if (item.IsFile)
@@ -85,6 +89,10 @@ namespace DatabaseNightmareTechnology
             }
             else if (dataOutput == DataOutput.Local)
             {
+                // ディレクトリがなければ作成
+                Json.SafeCreateDirectory(localDirectory);
+
+                // ファイルリスト取得
                 Json.GetFileList(list, localDirectory);
             }
             return list;
@@ -92,6 +100,7 @@ namespace DatabaseNightmareTechnology
 
         /// <summary>
         /// Dropboxかローカルのいずれかでデータを取得する
+        /// ディレクトリがなければ作成する
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dataOutput"></param>
@@ -107,6 +116,9 @@ namespace DatabaseNightmareTechnology
             {
                 using (var client = new DropboxClient(accessToken))
                 {
+                    // ディレクトリがなければ作成
+                    await FolderExists(client, dropboxDirectory);
+
                     using (var response = await client.Files.DownloadAsync($"{dropboxDirectory}/{filename}"))
                     {
                         data = await Json.ToObjectAsync<T>(await response.GetContentAsStringAsync());
@@ -116,6 +128,73 @@ namespace DatabaseNightmareTechnology
             else if (dataOutput == DataOutput.Local)
             {
                 data = await Json.Load<T>(localDirectory, filename);
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// Dropboxかローカルのいずれかでデータを文字列で取得する
+        /// ディレクトリがなければ作成する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataOutput"></param>
+        /// <param name="filename"></param>
+        /// <param name="dropboxDirectory"></param>
+        /// <param name="localDirectory"></param>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        public static async Task<string> MultiLoadStringAsync(DataOutput dataOutput, string filename, string dropboxDirectory = null, string localDirectory = null, string accessToken = null)
+        {
+            var data = string.Empty;
+            if (dataOutput == DataOutput.Dropbox)
+            {
+                using (var client = new DropboxClient(accessToken))
+                {
+                    // ディレクトリがなければ作成
+                    await FolderExists(client, dropboxDirectory);
+
+                    using (var response = await client.Files.DownloadAsync($"{dropboxDirectory}/{filename}"))
+                    {
+                        data = await response.GetContentAsStringAsync();
+                    }
+                }
+            }
+            else if (dataOutput == DataOutput.Local)
+            {
+                data = Json.LoadString(localDirectory, filename);
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// Dropboxかローカルのいずれかでゴミ箱に移動する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataOutput"></param>
+        /// <param name="filename"></param>
+        /// <param name="trushDirectory"></param>
+        /// <param name="dropboxDirectory"></param>
+        /// <param name="localDirectory"></param>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        public static async Task<string> MultiDeleteFileAsync(DataOutput dataOutput, string filename, string trushDirectory, string fromDirectory, string dropboxRootDirectory = null, string localRootDirectory = null, string accessToken = null)
+        {
+            var data = string.Empty;
+            if (dataOutput == DataOutput.Dropbox)
+            {
+                using (var client = new DropboxClient(accessToken))
+                {
+                    // ディレクトリがなければ作成
+                    await FolderExists(client, dropboxRootDirectory);
+                    await FolderExists(client, dropboxRootDirectory + fromDirectory);
+                    await FolderExists(client, dropboxRootDirectory + trushDirectory);
+
+                    await client.Files.MoveV2Async(dropboxRootDirectory + fromDirectory + "/" + filename, dropboxRootDirectory + trushDirectory + "/" + Json.GetUnixTime() + filename);
+                }
+            }
+            else if (dataOutput == DataOutput.Local)
+            {
+                Json.DeleteFile(localRootDirectory, fromDirectory, filename, trushDirectory);
             }
             return data;
         }

@@ -24,23 +24,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="10" Grid.Row="0">
             <Label Content="汎用入力" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="100"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="ファイル選択：" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Center"/>
-                <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
-                <Button Content="削除" Command="{Binding Delete}" Style="{StaticResource MaterialDesignRaisedAccentButton}" HorizontalAlignment="Right" Grid.Column="2"/>
-            </Grid>
-
-            <DockPanel Margin="0,20,10,0">
+            <DockPanel Margin="0,10,0,0">
+                <Label Content="ファイル選択：" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True"/>
+            </DockPanel>
+            <DockPanel Margin="0,10,0,0">
                 <Label Content="データファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
                 <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}"/>
             </DockPanel>
@@ -57,6 +49,7 @@
             </ListView>
         </StackPanel>
         <StackPanel Grid.Row="2">
+            <Label Content="リストデータは、名前に共通のプレフィクスを付ける。リスト名#データ名('data#Field1')" HorizontalAlignment="Left" Margin="0"/>
             <Button Content="保存" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
             <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
         </StackPanel>

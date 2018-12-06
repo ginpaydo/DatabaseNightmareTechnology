@@ -56,10 +56,6 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// </summary>
         public ReactiveCommand Activate { get; }
         /// <summary>
-        /// 削除ボタン処理
-        /// </summary>
-        public ReactiveCommand Delete { get; }
-        /// <summary>
         /// 保存ボタン処理
         /// </summary>
         public ReactiveCommand Save { get; }
@@ -97,14 +93,6 @@ namespace DatabaseNightmareTechnology.ViewModels
             // 実行の許可/不許可を制御するIObservable<bool>
             // このValueがtrueかfalseかで制御される
             ReactiveProperty<bool> gate = new ReactiveProperty<bool>(true);
-
-            Delete = new ReactiveCommand(gate);
-            Delete.Subscribe(
-                d =>
-                {
-                    Model.Delete(d as string);
-                }
-            );
 
             Save = new ReactiveCommand(gate);
             Save.Subscribe(

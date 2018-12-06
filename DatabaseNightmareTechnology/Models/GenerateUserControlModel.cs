@@ -15,6 +15,9 @@ namespace DatabaseNightmareTechnology.Models
 {
     // TODO:データベースの所は気が向いたらリファクタリング
 
+    /// <summary>
+    /// メタデータ生成
+    /// </summary>
     class GenerateUserControlModel : BindableBase
     {
         #region Fields

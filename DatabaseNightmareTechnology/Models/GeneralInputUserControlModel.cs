@@ -11,6 +11,10 @@ namespace DatabaseNightmareTechnology.Models
     class GeneralInputUserControlModel : BindableBase
     {
         #region Fields
+        /// <summary>
+        /// 設定ファイル
+        /// </summary>
+        private SaveData SaveData { get; set; }
 
         private string fileName;
         /// <summary>
@@ -44,20 +48,22 @@ namespace DatabaseNightmareTechnology.Models
         public ObservableCollection<string> Items { get; } = new ObservableCollection<string>();
         #endregion
 
+        #region initialize
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public GeneralInputUserControlModel()
+        {
+            SaveResult = "チェック結果";
+        }
+        #endregion
+
         #region ボタン
         /// <summary>
         /// 保存ボタン処理
         /// </summary>
         /// <returns></returns>
         public async Task Save()
-        {
-        }
-
-        /// <summary>
-        /// 削除
-        /// </summary>
-        /// <param name="value"></param>
-        public void Delete(string value)
         {
         }
         #endregion
@@ -69,6 +75,20 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task ActivateAsync()
         {
+            FileList.Clear();
+
+            // データがあるかチェック
+            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
+
+            if (SaveData == null)
+            {
+                // セーブデータがない場合
+                SaveResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
+            }
+
+            // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
+            await DropboxHelper.GetFileListAsync(FileList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+
         }
         #endregion
     }

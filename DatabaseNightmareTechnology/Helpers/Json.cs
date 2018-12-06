@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -75,6 +76,42 @@ namespace DatabaseNightmareTechnology
             var data = File.ReadAllText(fullpath);
             return await ToObjectAsync<T>(data);
         }
+
+        /// <summary>
+        /// ファイルを文字列で読みこむ
+        /// </summary>
+        /// <param name="directory">ディレクトリ</param>
+        /// <param name="filename">ファイル名</param>
+        /// <returns></returns>
+        public static string LoadString(string directory, string filename)
+        {
+            string fullpath = GetPath(directory, filename);
+            // 存在チェック
+            if (!File.Exists(fullpath))
+            {
+                return string.Empty;
+            }
+            return File.ReadAllText(fullpath);
+        }
+
+        /// <summary>
+        /// ファイルを削除する
+        /// （ゴミ箱ディレクトリに移動する）
+        /// </summary>
+        /// <param name="rootDirectory">アプリが使用するルートディレクトリ</param>
+        /// <param name="fromDirectory">移動元ディレクトリ</param>
+        /// <param name="filename">ファイル名</param>
+        /// <param name="trushDirectory">ゴミ箱ディレクトリ</param>
+        public static void DeleteFile(string rootDirectory, string fromDirectory, string filename, string trushDirectory)
+        {
+            string srcpath = GetPath(rootDirectory + fromDirectory, filename);
+            string destpath = GetPath(rootDirectory + trushDirectory, GetUnixTime() + filename);
+            // 存在チェック
+            if (File.Exists(srcpath))
+            {
+                File.Move(srcpath, destpath);
+            }
+        }
         #endregion
 
         #region private
@@ -108,6 +145,12 @@ namespace DatabaseNightmareTechnology
             return directory;
         }
         #endregion
+
+        public static long GetUnixTime()
+        {
+            var dto = new DateTimeOffset(DateTime.Now);
+            return dto.ToUnixTimeSeconds();
+        }
 
         #region ディレクトリ関係
         /// <summary>

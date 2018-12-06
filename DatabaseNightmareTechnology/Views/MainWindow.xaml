@@ -40,8 +40,8 @@
                         <MenuItem Header="_接続先登録" Command="{Binding ToConnectionRegister}"/>
                         <MenuItem Header="_生成" Command="{Binding ToGenerate}"/>
                         <MenuItem Header="_テンプレート編集" Command="{Binding ToTemplateEdit}"/>
-                        <MenuItem Header="_ソース生成" Command="{Binding ToGenetalInput}"/>
-                        <MenuItem Header="_汎用入力" Command="{Binding ToSourceGenerate}"/>
+                        <MenuItem Header="_汎用入力" Command="{Binding ToGenetalInput}"/>
+                        <MenuItem Header="_ソース生成" Command="{Binding ToSourceGenerate}"/>
                         <MenuItem Header="_出力結果" Command="{Binding ToOutputResult}"/>
                     </Menu>
                 </DockPanel>
