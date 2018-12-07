@@ -30,7 +30,14 @@
             <Label Content="汎用入力" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
             <DockPanel Margin="0,10,0,0">
                 <Label Content="ファイル選択：" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True">
+                    <i:Interaction.Triggers>
+                        <!-- 選択したときの処理 -->
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectFile}" CommandParameter="{Binding ElementName=FileList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
                 <Label Content="データファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0"/>

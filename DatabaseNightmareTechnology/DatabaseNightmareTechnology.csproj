@@ -71,6 +71,7 @@
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\ConnectionRegisterUserControlModel.cs" />
     <Compile Include="Models\ConnectionSettingData.cs" />
+    <Compile Include="Models\DmtTemplate.cs" />
     <Compile Include="Models\DropboxSettingsUserControlModel.cs" />
     <Compile Include="Models\GenerateUserControlModel.cs" />
     <Compile Include="Models\HomeUserControlModel.cs" />

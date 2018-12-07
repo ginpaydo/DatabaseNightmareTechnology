@@ -131,7 +131,7 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(LocalDirectory))
+                    if (string.IsNullOrEmpty(LocalDirectory))
                     {
                         LocalDirectory = Constants.DataDirectory;
                     }

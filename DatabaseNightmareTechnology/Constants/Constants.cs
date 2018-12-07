@@ -16,9 +16,14 @@
         public const string ContentRegion = "ContentRegion";
 
         /// <summary>
+        /// データファイル拡張子
+        /// </summary>
+        public const string Extension = ".dat";
+
+        /// <summary>
         /// 設定ファイル名
         /// </summary>
-        public const string DataFileName = "config.dat";
+        public const string DataFileName = "config" + Extension;
 
         /// <summary>
         /// 設定ファイル保存ディレクトリ

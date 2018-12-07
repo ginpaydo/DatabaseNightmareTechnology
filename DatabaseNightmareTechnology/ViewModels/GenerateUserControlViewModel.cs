@@ -77,7 +77,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             Generate.Subscribe(
                 async d =>
                 {
-                    Log.Log($"メタデータファイルを保存：{FileName}.dat", Category.Info, Priority.None);
+                    Log.Log($"メタデータファイルを保存：{FileName}{Constants.Extension}", Category.Info, Priority.None);
                     await Model.Generate(d as string);
                 }
             );

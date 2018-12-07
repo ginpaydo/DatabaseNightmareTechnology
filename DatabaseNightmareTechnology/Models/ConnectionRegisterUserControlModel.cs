@@ -218,8 +218,8 @@ namespace DatabaseNightmareTechnology.Models
             {
                 if (SaveData != null)
                 {
-                    var portStr = String.Empty;
-                    if (!String.IsNullOrWhiteSpace(Port))
+                    var portStr = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(Port))
                     {
                         portStr = "," + Port;
                     }
@@ -246,10 +246,10 @@ namespace DatabaseNightmareTechnology.Models
                         connection.Open();
                     }
 
-                    if (!String.IsNullOrWhiteSpace(Title))
+                    if (!string.IsNullOrWhiteSpace(Title))
                     {
                         // OKならDropboxかローカルに保存
-                        await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{Title}.dat", ConnectionSettingData, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
+                        await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{Title}{Constants.Extension}", ConnectionSettingData, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
 
                         CheckResult = "チェックOK、保存したぜ";
                     }
@@ -271,11 +271,11 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public void AddPrefix()
         {
-            if (!String.IsNullOrWhiteSpace(InputPrefix) && !PrefixList.Contains(InputPrefix))
+            if (!string.IsNullOrWhiteSpace(InputPrefix) && !PrefixList.Contains(InputPrefix))
             {
                 PrefixList.Add(InputPrefix.Trim());
             }
-            InputPrefix = String.Empty;
+            InputPrefix = string.Empty;
         }
 
         /// <summary>
@@ -293,11 +293,11 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public void AddCommonColumn()
         {
-            if (!String.IsNullOrWhiteSpace(InputCommonColumn) && !CommonColumnList.Contains(InputCommonColumn))
+            if (!string.IsNullOrWhiteSpace(InputCommonColumn) && !CommonColumnList.Contains(InputCommonColumn))
             {
                 CommonColumnList.Add(InputCommonColumn.Trim());
             }
-            InputCommonColumn = String.Empty;
+            InputCommonColumn = string.Empty;
         }
 
         /// <summary>

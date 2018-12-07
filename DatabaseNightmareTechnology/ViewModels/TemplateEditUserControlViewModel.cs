@@ -59,6 +59,10 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// 保存ボタン処理
         /// </summary>
         public ReactiveCommand Save { get; }
+        /// <summary>
+        /// ファイル選択処理
+        /// </summary>
+        public ReactiveCommand SelectFile { get; }
         #endregion
 
         public TemplateEditUserControlViewModel(ILoggerFacade loggerFacade)
@@ -100,6 +104,17 @@ namespace DatabaseNightmareTechnology.ViewModels
                 {
                     Log.Log($"ファイルを保存", Category.Info, Priority.None);
                     await Model.Save();
+                }
+            );
+
+            SelectFile = new ReactiveCommand(gate);
+            SelectFile.Subscribe(
+                async d =>
+                {
+                    if (d != null)
+                    {
+                        await Model.SelectFile(d as string);
+                    }
                 }
             );
 

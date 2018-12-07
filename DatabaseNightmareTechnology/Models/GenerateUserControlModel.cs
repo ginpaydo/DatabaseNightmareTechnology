@@ -162,7 +162,7 @@ namespace DatabaseNightmareTechnology.Models
                                 column.Name = commentRow["Field"].ToString();
                                 column.NameCamel = column.Name.SnakeToLowerCamel();
                                 column.NamePascal = column.Name.SnakeToUpperCamel();
-                                column.IsKey = !String.IsNullOrEmpty(commentRow["Key"].ToString()) && commentRow["Key"].ToString() == "PRI";
+                                column.IsKey = !string.IsNullOrEmpty(commentRow["Key"].ToString()) && commentRow["Key"].ToString() == "PRI";
                                 column.Comment = commentRow["Comment"].ToString();
                                 column.IsNullable = commentRow["Null"].ToString() == "YES";
                                 column.DataTypeRaw = commentRow["Type"].ToString();
@@ -334,7 +334,7 @@ namespace DatabaseNightmareTechnology.Models
             }
 
             // Dropboxかローカルに保存
-            await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}.dat", MetaData, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
+            await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}{Constants.Extension}", MetaData, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
             CheckResult = $"保存できたぜ。よかったな！";
         }
         #endregion
@@ -431,7 +431,7 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         private string GetLengthMariaDB(string type)
         {
-            var length = String.Empty;
+            var length = string.Empty;
             if (type.Contains("varchar"))
             {
                 if (type.Contains("("))

@@ -68,6 +68,17 @@ namespace DatabaseNightmareTechnology.Models
         }
         #endregion
 
+        #region 選択されたときの処理
+        /// <summary>
+        /// ファイル選択されたときの処理
+        /// </summary>
+        /// <returns></returns>
+        public async Task SelectFile(string value)
+        {
+            //Body = await DropboxHelper.MultiLoadStringAsync(SaveData.DataOutput, value, Constants.ApplicationDirectoryDropbox + Directory, SaveData.LocalDirectory + Directory, SaveData.AccessToken);
+        }
+        #endregion
+
         #region 画面が表示されたときの処理
         /// <summary>
         /// 画面が表示されたときの処理

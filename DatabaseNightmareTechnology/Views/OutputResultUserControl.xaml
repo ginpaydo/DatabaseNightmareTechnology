@@ -49,7 +49,7 @@
                 <Label Content="ファイル選択：" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Center"/>
                 <ComboBox Name="FileList" ItemsSource="{Binding FileList}" IsSynchronizedWithCurrentItem="True" Grid.Column="1">
                     <i:Interaction.Triggers>
-                        <!-- 画面が表示されたときの処理 -->
+                        <!-- 選択したときの処理 -->
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectFile}" CommandParameter="{Binding ElementName=FileList, Path=SelectedItem}" />
                         </i:EventTrigger>
