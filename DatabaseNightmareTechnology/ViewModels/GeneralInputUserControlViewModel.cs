@@ -1,18 +1,26 @@
 ﻿using DatabaseNightmareTechnology.Models;
+using GongSolutions.Wpf.DragDrop;
 using Prism.Logging;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
-    class GeneralInputUserControlViewModel : ViewModelBase
+    class GeneralInputUserControlViewModel : ViewModelBase, IDropTarget
     {
+        /// <summary>
+        /// 受付するファイル
+        /// </summary>
+        private readonly string Extention = ".csv";
+
         /// <summary>
         /// POCO
         /// </summary>
@@ -38,7 +46,7 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// <summary>
         /// 汎用入力リスト
         /// </summary>
-        public ReadOnlyReactiveCollection<string> Items { get; private set; }
+        public ReadOnlyReactiveCollection<NameValueData> Items { get; private set; }
         #endregion
 
         #region Command
@@ -111,5 +119,27 @@ namespace DatabaseNightmareTechnology.ViewModels
             );
             #endregion
         }
+
+        #region ドラッグ＆ドロップ
+        public void DragOver(IDropInfo dropInfo)
+        {
+            var files = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
+            dropInfo.Effects = files.Any(fname => fname.EndsWith(Extention))
+                ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var files = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
+            dropInfo.Effects = files.Any(fname => fname.EndsWith(Extention))
+                ? DragDropEffects.Copy : DragDropEffects.None;
+
+            foreach (var file in files)
+            {
+                Model.DropFile(file);
+            }
+        }
+        #endregion
+
     }
 }

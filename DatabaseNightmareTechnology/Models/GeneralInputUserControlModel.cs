@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
+    /// <summary>
+    /// 汎用入力
+    /// </summary>
     class GeneralInputUserControlModel : BindableBase
     {
         #region Fields
@@ -18,7 +21,7 @@ namespace DatabaseNightmareTechnology.Models
 
         private string fileName;
         /// <summary>
-        /// 生成ファイル名(Razor可)
+        /// ファイル名
         /// </summary>
         public string FileName
         {
@@ -43,9 +46,8 @@ namespace DatabaseNightmareTechnology.Models
 
         /// <summary>
         /// パラメータと値リスト
-        /// TODO:独自クラスになるはず
         /// </summary>
-        public ObservableCollection<string> Items { get; } = new ObservableCollection<string>();
+        public ObservableCollection<NameValueData> Items { get; } = new ObservableCollection<NameValueData>();
         #endregion
 
         #region initialize
@@ -65,6 +67,24 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Save()
         {
+            if (string.IsNullOrWhiteSpace(FileName))
+            {
+                FileName = "なんか書けや";
+            }
+            else
+            {
+                // 保存データ
+                var data = new GeneralInput(Items.ToList());
+
+                // OKならDropboxかローカルに保存
+                await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}{Constants.Extension}", data, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+                SaveResult = "チェックOK、保存したぜ";
+
+                if (!FileList.Contains($"{FileName}{Constants.Extension}"))
+                {
+                    FileList.Add($"{FileName}{Constants.Extension}");
+                }
+            }
         }
         #endregion
 
@@ -75,7 +95,29 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task SelectFile(string value)
         {
-            //Body = await DropboxHelper.MultiLoadStringAsync(SaveData.DataOutput, value, Constants.ApplicationDirectoryDropbox + Directory, SaveData.LocalDirectory + Directory, SaveData.AccessToken);
+            Items.Clear();
+            var general = await DropboxHelper.MultiLoadAsync<GeneralInput>(SaveData.DataOutput, value, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+            var raw = new RawGeneralInput(general);
+            foreach (var item in raw.Datas)
+            {
+                Items.Add(item);
+            }
+            FileName = value.Substring(0, value.Length - Constants.Extension.Length);
+        }
+        #endregion
+
+        #region ドロップされたときの処理
+        /// <summary>
+        /// ドロップされたときの処理
+        /// </summary>
+        public void DropFile(string value)
+        {
+            var raw = new RawGeneralInput(value);
+            Items.Clear();
+            foreach (var item in raw.Datas)
+            {
+                Items.Add(item);
+            }
         }
         #endregion
 
@@ -87,6 +129,8 @@ namespace DatabaseNightmareTechnology.Models
         public async Task ActivateAsync()
         {
             FileList.Clear();
+            Items.Clear();
+            FileName = string.Empty;
 
             // データがあるかチェック
             SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
@@ -97,7 +141,7 @@ namespace DatabaseNightmareTechnology.Models
                 SaveResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
             }
 
-            // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
+            // データ読み込み（ディレクトリのファイル一覧を取得）
             await DropboxHelper.GetFileListAsync(FileList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
 
         }

@@ -6,6 +6,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:DatabaseNightmareTechnology.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -19,10 +20,10 @@
             <i:InvokeCommandAction Command="{Binding Activate}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid AllowDrop="False">
         <!-- 画面分割の定義 -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="140"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
@@ -43,21 +44,21 @@
                 <Label Content="データファイル名：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
                 <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}"/>
             </DockPanel>
+            <Label Content="↓ここにCSVファイルをドロップすると入力できるぞ" HorizontalAlignment="Left" Margin="0"/>
         </StackPanel>
-
-        <StackPanel Margin="10" Grid.Row="1">
-            <ListView ItemsSource="{Binding Items}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="パラメータ名" Width="180"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Value}" Header="値"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </StackPanel>
+        <DataGrid
+            Grid.Row="1"
+            ItemsSource="{Binding Items}"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DropHandler="{Binding}"
+            CanUserSortColumns="True"
+            CanUserAddRows="True"
+            materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+            materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2">
+        </DataGrid>
         <StackPanel Grid.Row="2">
             <Label Content="リストデータは、名前に共通のプレフィクスを付ける。リスト名#データ名('data#Field1')" HorizontalAlignment="Left" Margin="0"/>
-            <Button Content="保存" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+            <Button Content="保存" Command="{Binding Save}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
             <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
         </StackPanel>
     </Grid>

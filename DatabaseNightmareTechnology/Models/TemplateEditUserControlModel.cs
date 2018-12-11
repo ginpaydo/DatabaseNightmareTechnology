@@ -126,7 +126,7 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Save()
         {
-            if (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Title))
+            if (!string.IsNullOrWhiteSpace(Title))
             {
                 // OKならDropboxかローカルに保存
                 await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{Title}{Constants.Extension}", DmtTemplate, Constants.ApplicationDirectoryDropbox + Constants.TemplateDirectory, SaveData.LocalDirectory + Constants.TemplateDirectory, SaveData.AccessToken);

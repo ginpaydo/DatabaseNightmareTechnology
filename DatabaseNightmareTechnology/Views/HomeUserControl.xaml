@@ -18,7 +18,10 @@
             これはデータベースの解析をして<LineBreak/>
             ORマッピングのソースを作るためのデータを出すツールだ！<LineBreak/>
             独自フォーマットだから他のソフトでは読めないぜ？<LineBreak/>
-            Dropboxに保存するからちゃんと設定してくれよな！
+            Dropboxに保存するからちゃんと設定してくれよな！<LineBreak/>
+            <LineBreak/>
+            ・Razorメモ<LineBreak/>
+            @(Model.TableNamePascal)
         </TextBlock>
     </Grid>
 </UserControl>
