@@ -25,19 +25,36 @@
 
             <DockPanel Margin="0,20,10,0">
                 <Label Content="テンプレート：" HorizontalAlignment="Left" Margin="0"/>
-                <ComboBox Name="TemplateList" ItemsSource="{Binding TemplateList}" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox Name="TemplateList" ItemsSource="{Binding TemplateList}" IsSynchronizedWithCurrentItem="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectTemplate}" CommandParameter="{Binding ElementName=TemplateList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </DockPanel>
             <DockPanel Margin="0,20,10,0">
                 <Label Content="データベース情報（※）：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                <ComboBox Name="ConnectionList" ItemsSource="{Binding ConnectionList}" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox Name="ConnectionList" ItemsSource="{Binding ConnectionList}" IsSynchronizedWithCurrentItem="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectConnection}" CommandParameter="{Binding ElementName=ConnectionList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </DockPanel>
             <Label Content="※選択しない場合、汎用入力による単発生成" HorizontalAlignment="Left" Margin="0"/>
             <DockPanel Margin="0,20,10,0">
                 <Label Content="汎用データ（任意）：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                <ComboBox Name="GeneralList" ItemsSource="{Binding GeneralList}" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox Name="GeneralList" ItemsSource="{Binding GeneralList}" IsSynchronizedWithCurrentItem="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectGeneral}" CommandParameter="{Binding ElementName=GeneralList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </DockPanel>
-            <!-- TODO:複数入力なので、CommandParameterをどうするか考えること -->
-            <Button Content="生成" Command="{Binding Generate}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="10,20,0,0"/>
+            <Button Content="生成" Command="{Binding Generate}" HorizontalAlignment="Right" Margin="10,20,0,0"/>
             <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
         </StackPanel>
     </Grid>

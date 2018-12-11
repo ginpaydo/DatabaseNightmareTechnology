@@ -49,14 +49,26 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// 表示したときの処理
         /// </summary>
         public ReactiveCommand Activate { get; }
+
         /// <summary>
-        /// 削除ボタン処理
+        /// 選択処理
         /// </summary>
-        public ReactiveCommand Delete { get; }
+        public ReactiveCommand SelectTemplate { get; }
+
         /// <summary>
-        /// チェック＆保存ボタン処理
+        /// 選択処理
         /// </summary>
-        public ReactiveCommand Save { get; }
+        public ReactiveCommand SelectConnection { get; }
+
+        /// <summary>
+        /// 選択処理
+        /// </summary>
+        public ReactiveCommand SelectGeneral { get; }
+
+        /// <summary>
+        /// 生成ボタン処理
+        /// </summary>
+        public ReactiveCommand Generate { get; }
         #endregion
 
 
@@ -83,20 +95,36 @@ namespace DatabaseNightmareTechnology.ViewModels
             // このValueがtrueかfalseかで制御される
             ReactiveProperty<bool> gate = new ReactiveProperty<bool>(true);
 
-            Delete = new ReactiveCommand(gate);
-            Delete.Subscribe(
+            SelectTemplate = new ReactiveCommand(gate);
+            SelectTemplate.Subscribe(
                 d =>
                 {
-                    Model.Delete(d as string);
+                    Model.SelectTemplate(d as string);
                 }
             );
 
-            Save = new ReactiveCommand(gate);
-            Save.Subscribe(
+            SelectConnection = new ReactiveCommand(gate);
+            SelectConnection.Subscribe(
+                d =>
+                {
+                    Model.SelectConnection(d as string);
+                }
+            );
+
+            SelectGeneral = new ReactiveCommand(gate);
+            SelectGeneral.Subscribe(
+                d =>
+                {
+                    Model.SelectGeneral(d as string);
+                }
+            );
+
+            Generate = new ReactiveCommand(gate);
+            Generate.Subscribe(
                 async d =>
                 {
                     Log.Log($"ファイルを保存", Category.Info, Priority.None);
-                    await Model.Save();
+                    await Model.Generate();
                 }
             );
 
