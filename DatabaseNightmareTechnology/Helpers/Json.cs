@@ -86,12 +86,35 @@ namespace DatabaseNightmareTechnology
         public static string LoadString(string directory, string filename)
         {
             string fullpath = GetPath(directory, filename);
+            return LoadString(fullpath);
+        }
+
+        /// <summary>
+        /// ファイルを文字列で読みこむ
+        /// </summary>
+        /// <param name="filepath">パス</param>
+        /// <returns></returns>
+        public static string LoadString(string filepath)
+        {
             // 存在チェック
-            if (!File.Exists(fullpath))
+            if (!File.Exists(filepath))
             {
                 return string.Empty;
             }
-            return File.ReadAllText(fullpath);
+            return File.ReadAllText(filepath);
+        }
+
+        /// <summary>
+        /// 文字列データを保存する
+        /// </summary>
+        /// <param name="directory">ディレクトリ</param>
+        /// <param name="filename">ファイル名</param>
+        /// <param name="data">でーた</param>
+        /// <returns></returns>
+        public static void SaveString(string directory, string filename, string data)
+        {
+            string fullpath = GetPath(directory, filename);
+            File.WriteAllText(fullpath, data);
         }
 
         /// <summary>
@@ -112,9 +135,7 @@ namespace DatabaseNightmareTechnology
                 File.Move(srcpath, destpath);
             }
         }
-        #endregion
 
-        #region private
         /// <summary>
         /// ディレクトリとファイル名から
         /// 入出力用パスを取得する、ディレクトリがなければ作成する
@@ -123,12 +144,15 @@ namespace DatabaseNightmareTechnology
         /// <param name="directory">後ろのスラッシュの有無は自由</param>
         /// <param name="filename">要拡張子</param>
         /// <returns></returns>
-        private static string GetPath(string directory, string filename)
+        public static string GetPath(string directory, string filename)
         {
             directory = AdjustDirectory(directory);
             SafeCreateDirectory(directory);
             return directory + filename;
         }
+        #endregion
+
+        #region private
 
         /// <summary>
         /// ディレクトリの後ろをスラッシュにする

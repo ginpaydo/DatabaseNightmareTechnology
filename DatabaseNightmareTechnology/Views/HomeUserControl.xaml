@@ -20,8 +20,12 @@
             独自フォーマットだから他のソフトでは読めないぜ？<LineBreak/>
             Dropboxに保存するからちゃんと設定してくれよな！<LineBreak/>
             <LineBreak/>
-            ・Razorメモ<LineBreak/>
-            @(Model.TableNamePascal)
+            ■Razorメモ<LineBreak/>
+            ・DBを利用した一括生成フィールドの参照<LineBreak/>
+            @(Model.TableNamePascal)<LineBreak/>
+            ・汎用入力のフィールド参照<LineBreak/>
+            @(Model.Values["フィールド名"])<LineBreak/>
+            @(Model.ListedValues["リスト名"]["フィールド名"])
         </TextBlock>
     </Grid>
 </UserControl>

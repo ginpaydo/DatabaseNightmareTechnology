@@ -46,7 +46,7 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// <summary>
         /// 汎用入力リスト
         /// </summary>
-        public ReadOnlyReactiveCollection<NameValueData> Items { get; private set; }
+        public ReadOnlyReactiveCollection<ValueData> Items { get; private set; }
         #endregion
 
         #region Command

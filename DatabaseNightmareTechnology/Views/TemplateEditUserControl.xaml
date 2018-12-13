@@ -40,7 +40,7 @@
                 </ComboBox>
             </DockPanel>
             <DockPanel Margin="0,10,0,0">
-                <Label Content="生成ファイル名(Razor可)：" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                <Label Content="生成ファイル名(Razor可、拡張子も必要)：" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
                 <TextBox Width="200" Text="{Binding GenerateFileName.Value}"/>
                 <Label Content="テンプレートファイル名：" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalContentAlignment="Center"/>
                 <TextBox Text="{Binding Title.Value}"/>

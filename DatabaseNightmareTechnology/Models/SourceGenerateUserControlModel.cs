@@ -1,12 +1,17 @@
 ﻿using Prism.Mvvm;
 using RazorEngine;
+using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// TODO:できたらModelの親クラスを作ってリファクタリング
+// TODO:汎用入力のフォーマットを変える。値を全てList<string>にする。
 namespace DatabaseNightmareTechnology.Models
 {
     /// <summary>
@@ -15,6 +20,15 @@ namespace DatabaseNightmareTechnology.Models
     class SourceGenerateUserControlModel : BindableBase
     {
         #region Fields
+        // Razorのエンジン上に配置するテンプレートのキー
+        private readonly string FilenameKey = "FilenameKey";
+        private readonly string BodyKey = "BodyKey";
+
+        ///// <summary>
+        ///// ファイル名の生成の際に一時的に出力するファイル名
+        ///// </summary>
+        //private readonly string TmpTitle = "TmpTitle";
+
         /// <summary>
         /// 設定ファイル
         /// </summary>
@@ -38,19 +52,16 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public ObservableCollection<string> GeneralList { get; } = new ObservableCollection<string>();
 
-        private string template;
         /// <summary>
         /// 選択中の値
         /// </summary>
         public string Template { get; set; }
 
-        private string connection;
         /// <summary>
         /// 選択中の値
         /// </summary>
         public string Connection { get; set; }
 
-        private string general;
         /// <summary>
         /// 選択中の値
         /// </summary>
@@ -77,6 +88,7 @@ namespace DatabaseNightmareTechnology.Models
         }
         #endregion
 
+
         #region ボタン
         /// <summary>
         /// 生成ボタン処理
@@ -84,69 +96,88 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Generate()
         {
-            // 何するかって言うと・・・
             if (string.IsNullOrWhiteSpace(Template))
             {
                 SaveResult = "テンプレートはちゃんと選んでくれよな";
             }
             else
             {
-                // テンプレート読み込み
-                var template = DropboxHelper.MultiLoadAsync<DmtTemplate>(SaveData.DataOutput, Template, Constants.ApplicationDirectoryDropbox + Constants.TemplateDirectory, SaveData.LocalDirectory + Constants.TemplateDirectory, SaveData.AccessToken);
+                // テンプレート読み込み、エンジンに設定
+                var template = await DropboxHelper.MultiLoadAsync<DmtTemplate>(SaveData.DataOutput, Template, Constants.ApplicationDirectoryDropbox + Constants.TemplateDirectory, SaveData.LocalDirectory + Constants.TemplateDirectory, SaveData.AccessToken);
+                Engine.Razor.AddTemplate(FilenameKey, template.GenerateFileName);
+                Engine.Razor.AddTemplate(BodyKey, template.TemplateBody);
+
+                // 汎用入力読み込み
+                GeneralInput general = null;
+                if (!string.IsNullOrWhiteSpace(General))
+                {
+                    general = await DropboxHelper.MultiLoadAsync<GeneralInput>(SaveData.DataOutput, General, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+                }
 
                 if (string.IsNullOrWhiteSpace(Connection))
                 {
+                    // 出力ファイル名生成取得
+                    var filename = Engine.Razor.RunCompile(FilenameKey, null, general);
+                    Console.WriteLine("ファイル名：" + filename);
+
                     // 単独生成
-                    Console.WriteLine("単独生成");
+                    var result = Engine.Razor.RunCompile(BodyKey, null, general);
+                    Console.WriteLine(result);
+
+                    // 保存
+                    await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, result, Constants.ApplicationDirectoryDropbox + Constants.OutputSourceDirectory, SaveData.LocalDirectory + Constants.OutputSourceDirectory, SaveData.AccessToken);
+                    SaveResult = "成功だ。保存したぜ";
                 }
                 else
                 {
-                    // テーブル一括生成
-                    Console.WriteLine("テーブル一括生成");
+                    // TODO:あとここだけ
 
-                    //columns.Add(new { ColumnName = columnName, ColumnNameCamel = columnNameCamel, ColumnNamePascal = columnNamePascal, DataType = dataType, IsKey = isKey, Comment = comment, IsNullable = isNullable, Length = length });
-                    //var model = new
-                    //{
-                    //    Columns = columns,
-                    //    TableComment = tableComment,
-                    //    RawTableName = rawTableName,
-                    //    TableName = tableName,
-                    //    TableNameCamel = tableNameCamel,
-                    //    TableNamePascal = tableNamePascal,
-                    //    TableKeyDataType = keyColumnDataType,
-                    //    TableKeyColumnNamePascal = keyColumnNamePascal,
-                    //    TableKeyColumnNameCamel = keyColumnNameCamel
-                    //};
+                    // メタデータ読み込み
+                    var metadata = await DropboxHelper.MultiLoadAsync<MetaData>(SaveData.DataOutput, Connection, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
+                    metadata.GeneralInput = general;
 
-                    //Console.WriteLine("================================================================");
-                    //// @に代入する
-                    //var result1 = Engine.Razor.RunCompile(templateModel.FileName, "templateFile", null, model);
-                    //Console.WriteLine(result1);
-                    //Console.WriteLine("----------------------------------------------------------------");
-                    //var result2 = Engine.Razor.RunCompile(templateModel.Body, "templateBody", null, model);
-                    //Console.WriteLine(result2);
-                    //// TODO:複数のテンプレートを連続で出力すると、同じキーがあるってエラーが出る
+                    foreach (var table in metadata.Tables)
+                    {
+                        // 出力ファイル名生成取得
+                        var filename = Engine.Razor.RunCompile(FilenameKey, null, table);
+                        Console.WriteLine("ファイル名：" + filename);
 
-                    //// 出力処理
-                    //using (StreamWriter writer = File.CreateText($"{Path}{result1}"))
-                    //{
-                    //    writer.WriteLine(result2);
-                    //}
+                        // 生成
+                        var result = Engine.Razor.RunCompile(BodyKey, null, table);
+                        Console.WriteLine(result);
+
+                        // 保存
+                        await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, result, Constants.ApplicationDirectoryDropbox + Constants.OutputSourceDirectory, SaveData.LocalDirectory + Constants.OutputSourceDirectory, SaveData.AccessToken);
+                    }
+                    SaveResult = "成功だ。保存したぜ";
                 }
-
-                // TODO:保存
-                // OutputSourceDirectory
-
-                //    // 保存データ
-                //    var data = new GeneralInput(Items.ToList());
-
-                //    // OKならDropboxかローカルに保存
-                //    await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}{Constants.Extension}", data, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
-                //    SaveResult = "チェックOK、保存したぜ";
             }
 
-
+            // これでキーが解放されるはず？
+            Engine.Razor.Dispose();
         }
+
+        //private string GetOutFilePath(object model)
+        //{
+        //    // 生成ソース一時出力パス生成
+        //    var result = string.Empty;
+        //    //using (var writer = DropboxHelper.GetWriter(TmpTitle))
+        //    //{
+        //    //    // ファイル名生成
+        //    //    Engine.Razor.RunCompile(FilenameKey, writer, null, model);
+        //    //    writer.Close();
+
+        //    //    // 生成したファイル名読み込み
+        //    //    var name = Json.LoadString(DropboxHelper.GetTempFilePath(TmpTitle));
+
+        //    //    // 生成ソース一時出力パス取得
+        //    //    result = DropboxHelper.GetTempFilePath(name);
+        //    //}
+        //    // 生成ソース一時出力パス取得
+        //    var result = Engine.Razor.RunCompile(FilenameKey, null, model);
+        //    return result;
+        //}
+
         #endregion
 
         #region リスト選択

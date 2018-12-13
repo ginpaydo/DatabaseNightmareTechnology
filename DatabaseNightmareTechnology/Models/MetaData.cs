@@ -15,10 +15,36 @@ namespace DatabaseNightmareTechnology.Models
         /// テーブル
         /// </summary>
         public List<Table> Tables { get; set; }
+
+        /// <summary>
+        /// 汎用入力を適用する
+        /// </summary>
+        public GeneralInput GeneralInput
+        {
+            set
+            {
+                if(Tables != null)
+                {
+                    foreach (var item in Tables)
+                    {
+                        item.GeneralInput = value;
+                    }
+                }
+            }
+        }
     }
 
     class Table
     {
+        /// <summary>
+        /// 汎用入力
+        /// 保存はせず、ソース生成直前で別データから適用して使う
+        /// </summary>
+        public GeneralInput GeneralInput { get; set; }
+
+        /// <summary>
+        /// カラム
+        /// </summary>
         public List<Column> Columns { get; set; }
         /// <summary>
         /// プレフィクス付きの名前

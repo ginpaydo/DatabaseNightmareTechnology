@@ -167,6 +167,43 @@ namespace DatabaseNightmareTechnology
         }
 
         /// <summary>
+        /// Dropboxかローカルに文字列で保存
+        /// </summary>
+        /// <typeparam name="T">保存データクラス</typeparam>
+        /// <param name="dataOutput">データ出力モード</param>
+        /// <param name="filename">ファイル名（拡張子も必要）</param>
+        /// <param name="data">保存データ</param>
+        /// <param name="dropboxDirectory">Dropbox保存先ディレクトリ（相対パス、スラッシュから開始、最後スラッシュなし）</param>
+        /// <param name="localDirectory">ローカル保存先ディレクトリ（フルパス）</param>
+        /// <param name="accessToken">Dropboxアクセストークン</param>
+        /// <returns></returns>
+        public static async Task MultiSaveStringAsync(DataOutput dataOutput, string filename, string data, string dropboxDirectory = null, string localDirectory = null, string accessToken = null)
+        {
+            if (dataOutput == DataOutput.Dropbox)
+            {
+                using (var client = new DropboxClient(accessToken))
+                {
+                    FolderExists(client);
+
+                    // ファイルを保存
+                    using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+                    {
+                        await client.Files.UploadAsync(
+                            $"{dropboxDirectory}/{filename}",
+                            WriteMode.Overwrite.Instance,
+                            false,
+                            body: stream
+                            );
+                    }
+                }
+            }
+            else if (dataOutput == DataOutput.Local)
+            {
+                Json.SaveString(localDirectory, filename, data);
+            }
+        }
+
+        /// <summary>
         /// Dropboxかローカルのいずれかでゴミ箱に移動する
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -198,6 +235,28 @@ namespace DatabaseNightmareTechnology
             }
             return data;
         }
+
+        ///// <summary>
+        ///// ファイル出力のWriterを作成する
+        ///// </summary>
+        ///// <param name="filename"></param>
+        ///// <returns></returns>
+        //public static StreamWriter GetWriter(string filename)
+        //{
+        //    return new StreamWriter(GetTempFilePath(filename));
+        //}
+
+        /// <summary>
+        /// 一時ファイルのパスを取得する
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static string GetTempFilePath(string filename)
+        {
+            return Json.GetPath(Constants.TrushDirectory, filename);
+        }
+
+
         #endregion
 
         #region private
