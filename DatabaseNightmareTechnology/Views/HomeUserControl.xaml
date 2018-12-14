@@ -14,18 +14,20 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TextBlock FontFamily="Meiryo UI">
-            へーいみんなノッてるか～い？<LineBreak/>
-            これはデータベースの解析をして<LineBreak/>
-            ORマッピングのソースを作るためのデータを出すツールだ！<LineBreak/>
-            独自フォーマットだから他のソフトでは読めないぜ？<LineBreak/>
-            Dropboxに保存するからちゃんと設定してくれよな！<LineBreak/>
-            <LineBreak/>
             ■Razorメモ<LineBreak/>
             ・DBを利用した一括生成フィールドの参照<LineBreak/>
             @(Model.TableNamePascal)<LineBreak/>
             ・汎用入力のフィールド参照<LineBreak/>
-            @(Model.Values["フィールド名"])<LineBreak/>
-            @(Model.ListedValues["リスト名"]["フィールド名"])
+            @(Model.Values["フィールド名"][列番号])<LineBreak/>
+            @(Model.ListedValues["リスト名"][列番号])<LineBreak/>
+            列番号は、CSVファイルの2列目が0,3列目が1,…<LineBreak/>
+            ■汎用入力データ：CSVファイルメモ<LineBreak/>
+            ・1行1データ、1列目はフィールド名、2列目からパラメータ<LineBreak/>
+            ・フィールド名は'#'で区切ることでリスト化できる<LineBreak/>
+            (例)<LineBreak/>
+            "リスト名#フィールド名1"<LineBreak/>
+            "リスト名#フィールド名2"<LineBreak/>
+            '#'は1行1個まで、階層的にリストを作ることはできない<LineBreak/>
         </TextBlock>
     </Grid>
 </UserControl>

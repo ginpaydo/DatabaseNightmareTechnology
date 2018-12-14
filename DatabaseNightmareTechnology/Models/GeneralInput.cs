@@ -14,13 +14,13 @@ namespace DatabaseNightmareTechnology.Models
     public class GeneralInput
     {
         public static char Separator = '#';
-        public Dictionary<string, string> Values { get; set; }
-        public Dictionary<string, Dictionary<string, string>> ListedValues { get; set; }
+        public Dictionary<string, List<string>> Values { get; set; }
+        public Dictionary<string, Dictionary<string, List<string>>> ListedValues { get; set; }
 
         private void Initialize()
         {
-            Values = new Dictionary<string, string>();
-            ListedValues = new Dictionary<string, Dictionary<string, string>>();
+            Values = new Dictionary<string, List<string>>();
+            ListedValues = new Dictionary<string, Dictionary<string, List<string>>>();
         }
 
         public GeneralInput()
@@ -33,7 +33,7 @@ namespace DatabaseNightmareTechnology.Models
         /// 画面表示中のデータからのコンバート
         /// </summary>
         /// <param name="items">画面表示中のデータ</param>
-        public GeneralInput(List<ValueData> items)
+        public GeneralInput(List<DisplayValueData> items)
         {
             Initialize();
 
@@ -56,7 +56,7 @@ namespace DatabaseNightmareTechnology.Models
         /// Rawデータを読む
         /// </summary>
         /// <param name="raws">CSVから読みこんだデータ</param>
-        private void ReadRawData(List<ValueData> raws)
+        private void ReadRawData(List<DisplayValueData> raws)
         {
             // '#'区切りを処理する
             foreach (var item in raws)
@@ -69,9 +69,9 @@ namespace DatabaseNightmareTechnology.Models
                     var listname = names[1];
                     if (!ListedValues.ContainsKey(key))
                     {
-                        ListedValues.Add(key, new Dictionary<string, string>());
+                        ListedValues.Add(key, new Dictionary<string, List<string>>());
                     }
-                    ListedValues[key].Add(listname, item.Value);
+                    ListedValues[key].Add(listname, item.Values.Split(DisplayValueData.Separator).ToList());
                 }
                 else
                 {
@@ -79,7 +79,7 @@ namespace DatabaseNightmareTechnology.Models
                     if (!Values.ContainsKey(item.Key))
                     {
                         // 重複しているものは無視
-                        Values.Add(item.Key, item.Value);
+                        Values.Add(item.Key, item.Values.Split(DisplayValueData.Separator).ToList());
                     }
                 }
             }
@@ -92,12 +92,11 @@ namespace DatabaseNightmareTechnology.Models
     /// </summary>
     public class RawGeneralInput
     {
-        public static char Separator = ',';
-        public List<ValueData> Datas { get; set; }
+        public List<DisplayValueData> Datas { get; set; }
 
         private void Initialize()
         {
-            Datas = new List<ValueData>();
+            Datas = new List<DisplayValueData>();
         }
 
         /// <summary>
@@ -113,22 +112,14 @@ namespace DatabaseNightmareTechnology.Models
             {
                 foreach (var subitem in item.Value)
                 {
-                    var nameValueData = new ValueData
-                    {
-                        Key = item.Key + "#" + subitem.Key,
-                        Value = subitem.Value
-                    };
+                    var nameValueData = new DisplayValueData(item.Key + GeneralInput.Separator + subitem.Key, subitem.Value);
                     Datas.Add(nameValueData);
                 }
             }
 
             foreach (var item in generalInput.Values)
             {
-                var nameValueData = new ValueData
-                {
-                    Key = item.Key,
-                    Value = item.Value
-                };
+                var nameValueData = new DisplayValueData(item.Key, item.Value);
                 Datas.Add(nameValueData);
             }
 
@@ -153,14 +144,7 @@ namespace DatabaseNightmareTechnology.Models
                     if (!string.IsNullOrWhiteSpace(line))
                     {
                         // 読み込んだ一行をカンマ毎に分けて配列に格納する
-                        var values = line.Split(Separator);
-                        // 出力する
-                        var row = new ValueData
-                        {
-                            Key = values[0],
-                            Value = values.Length > 1 ? values[1] : string.Empty
-                        };
-                        Datas.Add(row);
+                        Datas.Add(new DisplayValueData(line));
                     }
                 }
             }
@@ -169,7 +153,70 @@ namespace DatabaseNightmareTechnology.Models
 
     /// <summary>
     /// 1件（行）のデータ
-    /// これを拡張すれば、何でも入りそうだね
+    /// 表示用
+    /// </summary>
+    public class DisplayValueData
+    {
+        public static char Separator = ',';
+
+        /// <summary>
+        /// 1列目
+        /// </summary>
+        public string Key { get; set; }
+
+        /// <summary>
+        /// 2列目以降
+        /// </summary>
+        public string Values { get; set; }
+
+        /// <summary>
+        /// CSV1行分のデータを格納する
+        /// </summary>
+        /// <param name="row">CSV1行分のデータ（カンマ区切り）</param>
+        public DisplayValueData(string row)
+        {
+            var all = row.Split(Separator);
+
+            var key = all[0];
+
+            // 2列目以降をカンマでつなぐ
+            var values = all.ToList();
+            values.RemoveAt(0);
+            var strValues = ListToString(values);
+
+            Key = key;
+            Values = strValues;
+        }
+
+        public DisplayValueData(string key, List<string> values)
+        {
+            Key = key;
+            Values = ListToString(values);
+        }
+
+        /// <summary>
+        /// リストをカンマ区切りの文字列に変換
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private string ListToString(List<string> list)
+        {
+            var strValues = new StringBuilder();
+            foreach (var item in list)
+            {
+                if (strValues.Length > 0)
+                {
+                    strValues.Append(Separator);
+                }
+                strValues.Append(item);
+            }
+
+            return strValues.ToString();
+        }
+    }
+
+    /// <summary>
+    /// 1件（行）のデータ
     /// </summary>
     public class ValueData
     {
@@ -179,8 +226,27 @@ namespace DatabaseNightmareTechnology.Models
         public string Key { get; set; }
 
         /// <summary>
-        /// 2列目
+        /// 2列目以降
         /// </summary>
-        public string Value { get; set; }
+        public List<string> Values { get; set; }
+
+        /// <summary>
+        /// 1件（行）のデータ
+        /// </summary>
+        public ValueData()
+        {
+            // なにもなし
+        }
+
+        /// <summary>
+        /// 1件（行）のデータ
+        /// 表示用データからのコンバート
+        /// </summary>
+        /// <param name="row">表示用データ</param>
+        public ValueData(DisplayValueData row)
+        {
+            Key = row.Key;
+            Values = row.Values.Split(DisplayValueData.Separator).ToList();
+        }
     }
 }

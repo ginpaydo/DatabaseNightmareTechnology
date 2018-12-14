@@ -47,7 +47,7 @@ namespace DatabaseNightmareTechnology.Models
         /// <summary>
         /// パラメータと値リスト
         /// </summary>
-        public ObservableCollection<ValueData> Items { get; } = new ObservableCollection<ValueData>();
+        public ObservableCollection<DisplayValueData> Items { get; } = new ObservableCollection<DisplayValueData>();
         #endregion
 
         #region initialize
