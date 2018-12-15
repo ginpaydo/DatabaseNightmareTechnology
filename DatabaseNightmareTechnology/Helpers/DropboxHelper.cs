@@ -226,7 +226,7 @@ namespace DatabaseNightmareTechnology
                     await FolderExists(client, dropboxRootDirectory + fromDirectory);
                     await FolderExists(client, dropboxRootDirectory + trushDirectory);
 
-                    await client.Files.MoveV2Async(dropboxRootDirectory + fromDirectory + "/" + filename, dropboxRootDirectory + trushDirectory + "/" + Json.GetUnixTime() + filename);
+                    await client.Files.MoveV2Async(dropboxRootDirectory + fromDirectory + "/" + filename, dropboxRootDirectory + trushDirectory + "/" + filename + Json.GetUnixTime());
                 }
             }
             else if (dataOutput == DataOutput.Local)

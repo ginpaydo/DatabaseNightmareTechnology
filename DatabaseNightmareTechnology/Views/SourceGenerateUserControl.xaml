@@ -55,7 +55,14 @@
                 </ComboBox>
             </DockPanel>
             <Button Content="生成" Command="{Binding Generate}" HorizontalAlignment="Right" Margin="10,20,0,0"/>
-            <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+            <TextBox Margin="10,10,10,0" Grid.Row="1"
+                Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto"
+                materialDesign:HintAssist.Hint="結果："
+                Text="{Binding SaveResult.Value}"
+                IsReadOnly="True"/>
         </StackPanel>
     </Grid>
 </UserControl>

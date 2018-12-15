@@ -204,11 +204,14 @@ namespace DatabaseNightmareTechnology.Models
             var strValues = new StringBuilder();
             foreach (var item in list)
             {
-                if (strValues.Length > 0)
+                if (!string.IsNullOrWhiteSpace(item))
                 {
-                    strValues.Append(Separator);
+                    if (strValues.Length > 0)
+                    {
+                        strValues.Append(Separator);
+                    }
+                    strValues.Append(item);
                 }
-                strValues.Append(item);
             }
 
             return strValues.ToString();

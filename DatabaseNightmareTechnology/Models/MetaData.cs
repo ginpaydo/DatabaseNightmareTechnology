@@ -9,7 +9,7 @@ namespace DatabaseNightmareTechnology.Models
     /// <summary>
     /// データベースから収集したメタデータ
     /// </summary>
-    class MetaData
+    public class MetaData
     {
         /// <summary>
         /// テーブル
@@ -34,7 +34,7 @@ namespace DatabaseNightmareTechnology.Models
         }
     }
 
-    class Table
+    public class Table
     {
         /// <summary>
         /// 汎用入力
@@ -66,7 +66,7 @@ namespace DatabaseNightmareTechnology.Models
     /// <summary>
     /// カラムデータ
     /// </summary>
-    class Column
+    public class Column
     {
         /// <summary>
         /// 名前

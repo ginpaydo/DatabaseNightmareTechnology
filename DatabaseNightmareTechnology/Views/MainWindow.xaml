@@ -8,7 +8,7 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="{Binding Title.Value}" Height="600" Width="800">
+        Title="{Binding Title.Value}" Height="600" Width="900">
     <i:Interaction.Triggers>
         <!-- 画面が表示されたときの初期処理イベント -->
         <i:EventTrigger EventName="Loaded">
@@ -38,7 +38,7 @@
                         <MenuItem Header="_Home" Command="{Binding ToHome}"/>
                         <MenuItem Header="_Dropbox設定" Command="{Binding ToDropboxSettings}"/>
                         <MenuItem Header="_接続先登録" Command="{Binding ToConnectionRegister}"/>
-                        <MenuItem Header="_生成" Command="{Binding ToGenerate}"/>
+                        <MenuItem Header="_メタデータ生成" Command="{Binding ToGenerate}"/>
                         <MenuItem Header="_テンプレート編集" Command="{Binding ToTemplateEdit}"/>
                         <MenuItem Header="_汎用入力" Command="{Binding ToGenetalInput}"/>
                         <MenuItem Header="_ソース生成" Command="{Binding ToSourceGenerate}"/>
