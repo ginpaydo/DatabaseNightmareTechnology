@@ -55,18 +55,23 @@ namespace DatabaseNightmareTechnology
         /// <summary>
         /// 指定したディレクトリのファイル一覧を取得する
         /// ディレクトリがなければ作成する
+        /// リストのクリアも行う
         /// </summary>
-        /// <param name="list">結果を入れるリストの参照（nullの場合リスト作成）</param>
         /// <param name="dataOutput">データ出力モード</param>
         /// <param name="dropboxDirectory">Dropbox保存先ディレクトリ（相対パス、スラッシュから開始、最後スラッシュなし）</param>
         /// <param name="localDirectory">ローカル保存先ディレクトリ（フルパス）</param>
         /// <param name="accessToken">Dropboxアクセストークン</param>
+        /// <param name="list">結果を入れるリストの参照（指定しない場合リスト作成）</param>
         /// <returns></returns>
-        public static async Task<ObservableCollection<string>> GetFileListAsync(ObservableCollection<string> list, DataOutput dataOutput, string dropboxDirectory = null, string localDirectory = null, string accessToken = null)
+        public static async Task<ObservableCollection<string>> GetFileListAsync(DataOutput dataOutput, string dropboxDirectory = null, string localDirectory = null, string accessToken = null, ObservableCollection<string> list = null)
         {
             if (list == null)
             {
                 list = new ObservableCollection<string>();
+            }
+            else
+            {
+                list.Clear();
             }
 
             if (dataOutput == DataOutput.Dropbox)

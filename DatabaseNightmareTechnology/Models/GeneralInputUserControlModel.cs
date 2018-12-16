@@ -11,13 +11,9 @@ namespace DatabaseNightmareTechnology.Models
     /// <summary>
     /// 汎用入力
     /// </summary>
-    class GeneralInputUserControlModel : BindableBase
+    class GeneralInputUserControlModel : ModelBase
     {
         #region Fields
-        /// <summary>
-        /// 設定ファイル
-        /// </summary>
-        private SaveData SaveData { get; set; }
 
         private string fileName;
         /// <summary>
@@ -29,16 +25,6 @@ namespace DatabaseNightmareTechnology.Models
             set { SetProperty(ref fileName, value); }
         }
 
-        private string saveResult;
-        /// <summary>
-        /// テンプレートファイル名
-        /// </summary>
-        public string SaveResult
-        {
-            get { return saveResult; }
-            set { SetProperty(ref saveResult, value); }
-        }
-
         /// <summary>
         /// ファイルリスト
         /// </summary>
@@ -48,6 +34,14 @@ namespace DatabaseNightmareTechnology.Models
         /// パラメータと値リスト
         /// </summary>
         public ObservableCollection<DisplayValueData> Items { get; } = new ObservableCollection<DisplayValueData>();
+
+        /// <summary>
+        /// セーブデータ使用画面
+        /// </summary>
+        protected override bool UseSaveData
+        {
+            get { return true; }
+        }
         #endregion
 
         #region initialize
@@ -67,24 +61,16 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Save()
         {
-            if (string.IsNullOrWhiteSpace(FileName))
-            {
-                FileName = "なんか書けや";
-            }
-            else
-            {
-                // 保存データ
-                var data = new GeneralInput(Items.ToList());
+            await SimpleSave(Constants.GeneralInputDirectory, $"{FileName}{Constants.Extension}", FileList);
+        }
 
-                // OKならDropboxかローカルに保存
-                await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{FileName}{Constants.Extension}", data, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
-                SaveResult = "チェックOK、保存したぜ";
-
-                if (!FileList.Contains($"{FileName}{Constants.Extension}"))
-                {
-                    FileList.Add($"{FileName}{Constants.Extension}");
-                }
-            }
+        /// <summary>
+        /// 実行条件
+        /// </summary>
+        /// <returns></returns>
+        protected override bool CheckRequiredFields()
+        {
+            return !string.IsNullOrWhiteSpace(FileName);
         }
         #endregion
 
@@ -96,13 +82,13 @@ namespace DatabaseNightmareTechnology.Models
         public async Task SelectFile(string value)
         {
             Items.Clear();
-            var general = await DropboxHelper.MultiLoadAsync<GeneralInput>(SaveData.DataOutput, value, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+            var general = await SimpleLoad<GeneralInput>(Constants.GeneralInputDirectory, value);
             var raw = new RawGeneralInput(general);
             foreach (var item in raw.Datas)
             {
                 Items.Add(item);
             }
-            FileName = value.Substring(0, value.Length - Constants.Extension.Length);
+            FileName = RemoveExtension(value);
         }
         #endregion
 
@@ -122,28 +108,14 @@ namespace DatabaseNightmareTechnology.Models
         #endregion
 
         #region 画面が表示されたときの処理
-        /// <summary>
-        /// 画面が表示されたときの処理
-        /// </summary>
-        /// <returns></returns>
-        public async Task ActivateAsync()
+
+        protected override async Task Activate()
         {
-            FileList.Clear();
             Items.Clear();
             FileName = string.Empty;
 
-            // データがあるかチェック
-            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
-
-            if (SaveData == null)
-            {
-                // セーブデータがない場合
-                SaveResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
-            }
-
             // データ読み込み（ディレクトリのファイル一覧を取得）
-            await DropboxHelper.GetFileListAsync(FileList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
-
+            await SimpleFileList(Constants.GeneralInputDirectory, FileList);
         }
         #endregion
     }

@@ -44,6 +44,10 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// </summary>
         public ReactiveCommand Activate { get; }
         /// <summary>
+        /// ファイル選択したときの処理
+        /// </summary>
+        public ReactiveCommand SelectFile { get; }
+        /// <summary>
         /// 生成ボタン
         /// </summary>
         public ReactiveCommand Generate { get; }
@@ -78,7 +82,15 @@ namespace DatabaseNightmareTechnology.ViewModels
                 async d =>
                 {
                     Log.Log($"メタデータファイルを保存：{FileName}{Constants.Extension}", Category.Info, Priority.None);
-                    await Model.Generate(d as string);
+                    await Model.Generate();
+                }
+            );
+
+            SelectFile = new ReactiveCommand(gate);
+            SelectFile.Subscribe(
+                d =>
+                {
+                    Model.SelectFile(d as string);
                 }
             );
 

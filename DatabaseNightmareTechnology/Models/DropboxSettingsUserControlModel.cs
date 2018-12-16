@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    class DropboxSettingsUserControlModel : BindableBase
+    class DropboxSettingsUserControlModel : ModelBase
     {
         #region Fields
 
         #region SaveData
-        /// <summary>
-        /// ファイルとして出力する設定項目
-        /// </summary>
-        private SaveData SaveData { get; set; }
-
         private string localDirectory;
         /// <summary>
         /// ローカルディレクトリ
@@ -93,14 +88,12 @@ namespace DatabaseNightmareTechnology.Models
             set { SetProperty(ref email, value); }
         }
 
-        private string checkResult;
         /// <summary>
-        /// チェック結果
+        /// セーブデータ使用画面
         /// </summary>
-        public string CheckResult
+        protected override bool UseSaveData
         {
-            get { return checkResult; }
-            set { SetProperty(ref checkResult, value); }
+            get { return true; }
         }
         #endregion
 
@@ -112,7 +105,6 @@ namespace DatabaseNightmareTechnology.Models
             SaveData = new SaveData();
             UserName = string.Empty;
             Email = string.Empty;
-            CheckResult = "チェック結果";
         }
 
         #region ボタン
@@ -138,15 +130,20 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 // 設定を保存する
                 await Json.Save(SaveData, Constants.DataDirectory, Constants.DataFileName);
-                CheckResult = "チェックOK 保存完了";
+                SaveResult = "チェックOK 保存完了";
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 UserName = "このハゲー！";
                 Email = "ちーがーうーだーろー！？　違うだろーーッ！！";
-                CheckResult = "チェックNG";
+                SaveResult = "チェックNG";
             }
+        }
+
+        protected override bool CheckRequiredFields()
+        {
+            return true;
         }
         #endregion
 
@@ -167,7 +164,7 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 catch(Exception e)
                 {
-                    CheckResult = "このトークン、もう使えないみたいだぜ？：" + e.Message;
+                    SaveResult = "このトークン、もう使えないみたいだぜ？：" + e.Message;
                 }
             }
         }
@@ -177,7 +174,7 @@ namespace DatabaseNightmareTechnology.Models
         /// 画面が表示されたときの処理
         /// </summary>
         /// <returns></returns>
-        public async Task ActivateAsync()
+        public override async Task ActivateAsync()
         {
             // データがあるかチェック
             var data = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
@@ -200,6 +197,15 @@ namespace DatabaseNightmareTechnology.Models
                     await LoadUserProfileAsync();
                 }
             }
+        }
+        /// <summary>
+        /// 画面が表示されたときの処理
+        /// </summary>
+        /// <returns></returns>
+        protected override async Task Activate()
+        {
+            // 何もしない
+            await Task.Delay(1);
         }
 
         /// <summary>

@@ -1,38 +1,21 @@
-﻿using Prism.Mvvm;
-using RazorEngine;
+﻿using RazorEngine;
 using RazorEngine.Templating;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// TODO:できたらModelの親クラスを作ってリファクタリング
-// TODO:汎用入力のフォーマットを変える。値を全てList<string>にする。
 namespace DatabaseNightmareTechnology.Models
 {
     /// <summary>
     /// 出力結果
     /// </summary>
-    class SourceGenerateUserControlModel : BindableBase
+    class SourceGenerateUserControlModel : ModelBase
     {
         #region Fields
         // Razorのエンジン上に配置するテンプレートのキー
         private readonly string FilenameKeyBase = "FilenameKey";
         private readonly string BodyKeyBase = "BodyKey";
-
-        ///// <summary>
-        ///// ファイル名の生成の際に一時的に出力するファイル名
-        ///// </summary>
-        //private readonly string TmpTitle = "TmpTitle";
-
-        /// <summary>
-        /// 設定ファイル
-        /// </summary>
-        private SaveData SaveData { get; set; }
 
         /// <summary>
         /// テンプレートリスト
@@ -67,27 +50,14 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public string General { get; set; }
 
-        private string saveResult;
         /// <summary>
-        /// 保存結果
+        /// セーブデータ使用画面
         /// </summary>
-        public string SaveResult
+        protected override bool UseSaveData
         {
-            get { return saveResult; }
-            set { SetProperty(ref saveResult, value); }
+            get { return true; }
         }
         #endregion
-
-        #region initialize
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public SourceGenerateUserControlModel()
-        {
-            SaveResult = "結果";
-        }
-        #endregion
-
 
         #region ボタン
         /// <summary>
@@ -96,20 +66,23 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Generate()
         {
-            if (string.IsNullOrWhiteSpace(Template))
+            if (CheckRequiredFields())
             {
-                SaveResult = "テンプレートはちゃんと選んでくれよな";
+                SaveResult = MessageConstants.NotChooseTemplate;
             }
             else
             {
                 try
                 {
+                    // 実行結果
+                    var resultStr = new StringBuilder(MessageConstants.ActionSucceed);
+
                     // キー生成
                     var FilenameKey = FilenameKeyBase + Json.GetUnixTime();
                     var BodyKey = BodyKeyBase + Json.GetUnixTime();
 
                     // テンプレート読み込み、エンジンに設定
-                    var template = await DropboxHelper.MultiLoadAsync<DmtTemplate>(SaveData.DataOutput, Template, Constants.ApplicationDirectoryDropbox + Constants.TemplateDirectory, SaveData.LocalDirectory + Constants.TemplateDirectory, SaveData.AccessToken);
+                    var template = await SimpleLoad<DmtTemplate>(Constants.TemplateDirectory, Template);
                     Engine.Razor.AddTemplate(FilenameKey, template.GenerateFileName);
                     Engine.Razor.Compile(FilenameKey);
                     Engine.Razor.AddTemplate(BodyKey, template.TemplateBody);
@@ -119,27 +92,28 @@ namespace DatabaseNightmareTechnology.Models
                     GeneralInput general = null;
                     if (!string.IsNullOrWhiteSpace(General))
                     {
-                        general = await DropboxHelper.MultiLoadAsync<GeneralInput>(SaveData.DataOutput, General, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
+                        general = await SimpleLoad<GeneralInput>(Constants.GeneralInputDirectory, General);
                     }
                     if (string.IsNullOrWhiteSpace(Connection))
                     {
                         if (general == null)
                         {
-                            await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, template.GenerateFileName, template.TemplateBody, Constants.ApplicationDirectoryDropbox + Constants.OutputSourceDirectory, SaveData.LocalDirectory + Constants.OutputSourceDirectory, SaveData.AccessToken);
-                            SaveResult = "成功だ。保存したぜ";
+                            await SimpleSaveString(Constants.OutputSourceDirectory, template.GenerateFileName, template.TemplateBody);
+                            resultStr.Append("\nファイル名：" + template.GenerateFileName);
+                            SaveResult = resultStr.ToString();
                         }
                         else
                         {
                             // 出力ファイル名生成取得
                             var filename = Engine.Razor.Run(FilenameKey, null, general);
-                            Console.WriteLine("ファイル名：" + filename);
+                            resultStr.Append("\nファイル名：" + filename);
 
                             // 単独生成
                             var result = Engine.Razor.Run(BodyKey, null, general);
 
                             // 保存
-                            await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, filename, result, Constants.ApplicationDirectoryDropbox + Constants.OutputSourceDirectory, SaveData.LocalDirectory + Constants.OutputSourceDirectory, SaveData.AccessToken);
-                            SaveResult = "成功だ。保存したぜ";
+                            await SimpleSaveString(Constants.OutputSourceDirectory, filename, result);
+                            SaveResult = resultStr.ToString();
                         }
                     }
                     else
@@ -152,15 +126,15 @@ namespace DatabaseNightmareTechnology.Models
                         {
                             // 出力ファイル名生成取得
                             var filename = Engine.Razor.Run(FilenameKey, null, table);
-                            Console.WriteLine("ファイル名：" + filename);
+                            resultStr.Append("\nファイル名：" + filename);
 
                             // 生成
                             var result = Engine.Razor.Run(BodyKey, null, table);
 
                             // 保存
-                            await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, filename, result, Constants.ApplicationDirectoryDropbox + Constants.OutputSourceDirectory, SaveData.LocalDirectory + Constants.OutputSourceDirectory, SaveData.AccessToken);
+                            await SimpleSaveString(Constants.OutputSourceDirectory, filename, result);
                         }
-                        SaveResult = "成功だ。保存したぜ";
+                        SaveResult = resultStr.ToString();
                     }
                 }
                 catch (Exception e)
@@ -168,6 +142,15 @@ namespace DatabaseNightmareTechnology.Models
                     SaveResult = e.Message;
                 }
             }
+        }
+
+        /// <summary>
+        /// 実行条件
+        /// </summary>
+        /// <returns></returns>
+        protected override bool CheckRequiredFields()
+        {
+            return !string.IsNullOrWhiteSpace(Template);
         }
 
         #endregion
@@ -208,32 +191,18 @@ namespace DatabaseNightmareTechnology.Models
         /// 画面が表示されたときの処理
         /// </summary>
         /// <returns></returns>
-        public async Task ActivateAsync()
+        protected override async Task Activate()
         {
-            SaveResult = "結果";
-            TemplateList.Clear();
-            ConnectionList.Clear();
-            GeneralList.Clear();
             Template = string.Empty;
             Connection = string.Empty;
             General = string.Empty;
             ConnectionList.Add(string.Empty);
             GeneralList.Add(string.Empty);
 
-            // データがあるかチェック
-            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
-
-            if (SaveData == null)
-            {
-                // セーブデータがない場合
-                SaveResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
-            }
-
             // データ読み込み（ディレクトリのファイル一覧を取得）
-            await DropboxHelper.GetFileListAsync(TemplateList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.TemplateDirectory, SaveData.LocalDirectory + Constants.TemplateDirectory, SaveData.AccessToken);
-            await DropboxHelper.GetFileListAsync(ConnectionList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.MetaDataDirectory, SaveData.LocalDirectory + Constants.MetaDataDirectory, SaveData.AccessToken);
-            await DropboxHelper.GetFileListAsync(GeneralList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + Constants.GeneralInputDirectory, SaveData.LocalDirectory + Constants.GeneralInputDirectory, SaveData.AccessToken);
-
+            await SimpleFileList(Constants.TemplateDirectory, TemplateList);
+            await SimpleFileList(Constants.MetaDataDirectory, ConnectionList);
+            await SimpleFileList(Constants.GeneralInputDirectory, GeneralList);
         }
         #endregion
     }

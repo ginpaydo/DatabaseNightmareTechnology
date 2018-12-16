@@ -12,14 +12,9 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    class ConnectionRegisterUserControlModel : BindableBase
+    class ConnectionRegisterUserControlModel : ModelBase
     {
         #region Fields
-
-        /// <summary>
-        /// 設定ファイル
-        /// </summary>
-        private SaveData SaveData { get; set; }
 
         #region ConnectionSettingData
         /// <summary>
@@ -178,14 +173,12 @@ namespace DatabaseNightmareTechnology.Models
             set { SetProperty(ref title, value); }
         }
 
-        private string checkResult;
         /// <summary>
-        /// チェック結果
+        /// セーブデータ使用画面
         /// </summary>
-        public string CheckResult
+        protected override bool UseSaveData
         {
-            get { return checkResult; }
-            set { SetProperty(ref checkResult, value); }
+            get { return true; }
         }
         #endregion
 
@@ -195,7 +188,6 @@ namespace DatabaseNightmareTechnology.Models
         public ConnectionRegisterUserControlModel()
         {
             ConnectionSettingData = new ConnectionSettingData();
-            CheckResult = "チェック結果";
 
             // サンプルデータ
             PrefixList.Add("mt_");
@@ -216,54 +208,45 @@ namespace DatabaseNightmareTechnology.Models
         {
             try
             {
-                if (SaveData != null)
+                var portStr = string.Empty;
+                if (!string.IsNullOrWhiteSpace(Port))
                 {
-                    var portStr = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(Port))
-                    {
-                        portStr = "," + Port;
-                    }
-
-                    var builder = new SqlConnectionStringBuilder()
-                    {
-                        DataSource = Host + portStr,
-                        IntegratedSecurity = false, // Windows認証ではなく、ID,Pass認証
-                        UserID = $"{Account}",
-                        Password = $"{Password}"
-                    };
-                    // MariaDBはInitialCatalogできないため
-                    ConnectionString = $"{builder.ToString()};database={DbName};";
-
-                    // 繋がるかどうか確認
-                    if (ConnectionSettingData.DatabaseEngine == DatabaseEngine.MariaDB)
-                    {
-                        var connection = new MySqlConnection(ConnectionString);
-                        connection.Open();
-                    }
-                    else if (ConnectionSettingData.DatabaseEngine == DatabaseEngine.SqlServer)
-                    {
-                        var connection = new SqlConnection(ConnectionString);
-                        connection.Open();
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(Title))
-                    {
-                        // OKならDropboxかローカルに保存
-                        await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, $"{Title}{Constants.Extension}", ConnectionSettingData, Constants.ApplicationDirectoryDropbox + Constants.ConnectionDirectory, SaveData.LocalDirectory + Constants.ConnectionDirectory, SaveData.AccessToken);
-
-                        CheckResult = "チェックOK、保存したぜ";
-                    }
-                    else
-                    {
-                        CheckResult = "…おい、タイトルを入力してくれよ保存できねぇだろ？";
-                    }
-
+                    portStr = "," + Port;
                 }
+
+                var builder = new SqlConnectionStringBuilder()
+                {
+                    DataSource = Host + portStr,
+                    IntegratedSecurity = false, // Windows認証ではなく、ID,Pass認証
+                    UserID = $"{Account}",
+                    Password = $"{Password}"
+                };
+                // MariaDBはInitialCatalogできないため
+                ConnectionString = $"{builder.ToString()};database={DbName};";
+
+                // 繋がるかどうか確認
+                if (ConnectionSettingData.DatabaseEngine == DatabaseEngine.MariaDB)
+                {
+                    var connection = new MySqlConnection(ConnectionString);
+                    connection.Open();
+                }
+                else if (ConnectionSettingData.DatabaseEngine == DatabaseEngine.SqlServer)
+                {
+                    var connection = new SqlConnection(ConnectionString);
+                    connection.Open();
+                }
+
+                await SimpleSave(Constants.ConnectionDirectory, $"{Title}{Constants.Extension}", ConnectionSettingData);
             }
             catch (Exception e)
             {
-                CheckResult = "チェックNG:" + e.Message;
+                SaveResult = "チェックNG:" + e.Message;
             }
+        }
+
+        protected override bool CheckRequiredFields()
+        {
+            return !string.IsNullOrWhiteSpace(Title);
         }
 
         /// <summary>
@@ -316,16 +299,10 @@ namespace DatabaseNightmareTechnology.Models
         /// 画面が表示されたときの処理
         /// </summary>
         /// <returns></returns>
-        public async Task ActivateAsync()
+        protected override async Task Activate()
         {
-            // データがあるかチェック
-            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
-
-            if (SaveData == null)
-            {
-                // セーブデータがない場合
-                CheckResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
-            }
+            // 何もしない
+            await Task.Delay(1);
         }
         #endregion
     }

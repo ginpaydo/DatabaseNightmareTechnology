@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace DatabaseNightmareTechnology.Models
+namespace DatabaseNightmareTechnology
 {
     /// <summary>
     /// データベースから収集したメタデータ
@@ -58,6 +54,7 @@ namespace DatabaseNightmareTechnology.Models
         public string NamePascal { get; set; }
         public string Comment { get; set; }
         public string KeyDataTypeRaw { get; set; } // DBの型（各言語によって異なるため）
+        public string KeyDataType { get; set; } // DBの型
         public string KeyName { get; set; }
         public string KeyNamePascal { get; set; }
         public string KeyNameCamel { get; set; }
@@ -87,6 +84,11 @@ namespace DatabaseNightmareTechnology.Models
         /// 型（DBの型）カッコ付きなので注意
         /// </summary>
         public string DataTypeRaw { get; set; }
+
+        /// <summary>
+        /// 型（DBの型）カッコ除外
+        /// </summary>
+        public string DataType { get; set; }
 
         /// <summary>
         /// コメント

@@ -148,7 +148,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.InputCommonColumn
                 );
             CheckResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.CheckResult
+                m => m.SaveResult
                 ).ToReadOnlyReactiveProperty();
             ConnectionString = Model.ToReactivePropertyAsSynchronized(
                 m => m.ConnectionString

@@ -1,9 +1,9 @@
-﻿namespace DatabaseNightmareTechnology.Models
+﻿namespace DatabaseNightmareTechnology
 {
     /// <summary>
     /// テンプレートデータ
     /// </summary>
-    class DmtTemplate
+    public class DmtTemplate
     {
         /// <summary>
         /// 生成ファイル名

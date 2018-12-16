@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
-namespace DatabaseNightmareTechnology.Models
+namespace DatabaseNightmareTechnology
 {
     /// <summary>
     /// ファイルとして保存する接続先情報
     /// </summary>
-    class ConnectionSettingData
+    public class ConnectionSettingData
     {
         /// <summary>
         /// 対象データベース

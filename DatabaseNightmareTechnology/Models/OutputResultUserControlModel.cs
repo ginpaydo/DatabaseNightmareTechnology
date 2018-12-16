@@ -1,28 +1,19 @@
-﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    class OutputResultUserControlModel : BindableBase
+    class OutputResultUserControlModel : ModelBase
     {
-
-        private readonly string Message = "削除結果";
-
         #region Fields
-        /// <summary>
-        /// 設定ファイル
-        /// </summary>
-        private SaveData SaveData { get; set; }
-
         /// <summary>
         /// 選択中ディレクトリの控え
         /// </summary>
         private string Directory;
+        /// <summary>
+        /// 選択中ファイルの控え
+        /// </summary>
+        private string Filename;
 
         private string body;
         /// <summary>
@@ -32,16 +23,6 @@ namespace DatabaseNightmareTechnology.Models
         {
             get { return body; }
             set { SetProperty(ref body, value); }
-        }
-
-        private string deleteResult;
-        /// <summary>
-        /// 削除結果
-        /// </summary>
-        public string DeleteResult
-        {
-            get { return deleteResult; }
-            set { SetProperty(ref deleteResult, value); }
         }
 
         /// <summary>
@@ -54,17 +35,14 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public ObservableCollection<string> FileList { get; } = new ObservableCollection<string>();
 
-        #endregion
-
-        #region initialize
         /// <summary>
-        /// コンストラクタ
+        /// セーブデータ使用画面
         /// </summary>
-        public OutputResultUserControlModel()
+        protected override bool UseSaveData
         {
-            DeleteResult = Message;
-
+            get { return true; }
         }
+
         #endregion
 
         #region ボタン
@@ -72,13 +50,19 @@ namespace DatabaseNightmareTechnology.Models
         /// <summary>
         /// 削除
         /// </summary>
-        /// <param name="value"></param>
-        public async Task DeleteAsync(string value)
+        public async Task DeleteAsync()
         {
-            await DropboxHelper.MultiDeleteFileAsync(SaveData.DataOutput, value, Constants.TrushDirectory, Directory, Constants.ApplicationDirectoryDropbox, SaveData.LocalDirectory, SaveData.AccessToken);
-            DeleteResult = "削除しました";
+            await SimpleDelete(Directory, Filename, FileList);
             Body = string.Empty;
-            FileList.Remove(value);
+        }
+
+        /// <summary>
+        /// 実行条件
+        /// </summary>
+        /// <returns></returns>
+        protected override bool CheckRequiredFields()
+        {
+            return !string.IsNullOrWhiteSpace(Directory) && !string.IsNullOrWhiteSpace(Filename);
         }
         #endregion
 
@@ -89,21 +73,11 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task SelectDirectory(string value)
         {
-            DeleteResult = Message;
-            FileList.Clear();
+            SaveResult = MessageConstants.ActionResult;
             Directory = value;
 
-            // データがあるかチェック
-            SaveData = await Json.Load<SaveData>(Constants.DataDirectory, Constants.DataFileName);
-
-            if (SaveData == null)
-            {
-                // セーブデータがない場合
-                DeleteResult = "接続先の設定ができないぜ。先に設定画面の設定を完了させてくれよな！";
-            }
-
             // 接続先データ読み込み（ディレクトリのファイル一覧を取得）
-            await DropboxHelper.GetFileListAsync(FileList, SaveData.DataOutput, Constants.ApplicationDirectoryDropbox + value, SaveData.LocalDirectory + value, SaveData.AccessToken);
+            await SimpleFileList(Directory, FileList);
         }
 
         /// <summary>
@@ -112,16 +86,18 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task SelectFile(string value)
         {
-            Body = await DropboxHelper.MultiLoadStringAsync(SaveData.DataOutput, value, Constants.ApplicationDirectoryDropbox + Directory, SaveData.LocalDirectory + Directory, SaveData.AccessToken);
+            Filename = value;
+            Body = await SimpleLoadString(Directory, Filename);
         }
         #endregion
 
         #region 画面が表示されたときの処理
+
         /// <summary>
         /// 画面が表示されたときの処理
         /// </summary>
         /// <returns></returns>
-        public void Activate()
+        protected override async Task Activate()
         {
             FileList.Clear();
             DirectoryList.Clear();
@@ -131,6 +107,7 @@ namespace DatabaseNightmareTechnology.Models
             DirectoryList.Add(Constants.TemplateDirectory);
             DirectoryList.Add(Constants.GeneralInputDirectory);
             DirectoryList.Add(Constants.OutputSourceDirectory);
+            await Task.Delay(1);
         }
         #endregion
     }

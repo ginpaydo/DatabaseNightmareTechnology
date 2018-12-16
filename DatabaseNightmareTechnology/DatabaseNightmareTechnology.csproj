@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8AE2EEEF-FD95-40BA-9331-DAD8B1B99294}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DatabaseNightmareTechnology</RootNamespace>
     <AssemblyName>DatabaseNightmareTechnology</AssemblyName>
@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants\MessageConstants.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Enums\DataOutput.cs" />
     <Compile Include="Enums\DatabaseEngine.cs" />
@@ -70,19 +71,20 @@
     <Compile Include="Helpers\NLogLogger.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\ConnectionRegisterUserControlModel.cs" />
-    <Compile Include="Models\ConnectionSettingData.cs" />
-    <Compile Include="Models\DmtTemplate.cs" />
+    <Compile Include="Datas\ConnectionSettingData.cs" />
+    <Compile Include="Datas\DmtTemplate.cs" />
     <Compile Include="Models\DropboxSettingsUserControlModel.cs" />
-    <Compile Include="Models\GeneralInput.cs" />
+    <Compile Include="Datas\GeneralInput.cs" />
     <Compile Include="Models\GenerateUserControlModel.cs" />
     <Compile Include="Models\HomeUserControlModel.cs" />
     <Compile Include="Models\MainWindowModel.cs" />
-    <Compile Include="Models\MetaData.cs" />
+    <Compile Include="Datas\MetaData.cs" />
+    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\SourceGenerateUserControlModel.cs" />
     <Compile Include="Models\GeneralInputUserControlModel.cs" />
     <Compile Include="Models\TemplateEditUserControlModel.cs" />
     <Compile Include="Models\OutputResultUserControlModel.cs" />
-    <Compile Include="Models\SaveData.cs" />
+    <Compile Include="Datas\SaveData.cs" />
     <Compile Include="ViewModels\GeneralInputUserControlViewModel.cs" />
     <Compile Include="ViewModels\SourceGenerateUserControlViewModel.cs" />
     <Compile Include="ViewModels\TemplateEditUserControlViewModel.cs" />

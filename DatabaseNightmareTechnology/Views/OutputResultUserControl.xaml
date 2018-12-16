@@ -33,7 +33,7 @@
                 <Label Content="ディレクトリ"/>
                 <ComboBox Name="DirectoryList" ItemsSource="{Binding DirectoryList}" IsSynchronizedWithCurrentItem="True">
                     <i:Interaction.Triggers>
-                        <!-- 画面が表示されたときの処理 -->
+                        <!-- 選択したときの処理 -->
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectDirectory}" CommandParameter="{Binding ElementName=DirectoryList, Path=SelectedItem}" />
                         </i:EventTrigger>

@@ -73,7 +73,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.Body
                 );
             DeleteResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.DeleteResult
+                m => m.SaveResult
                 );
             #endregion
 
@@ -91,16 +91,16 @@ namespace DatabaseNightmareTechnology.ViewModels
             Delete.Subscribe(
                 async d =>
                 {
-                    await Model.DeleteAsync(d as string);
+                    await Model.DeleteAsync();
                 }
             );
 
             Activate = new ReactiveCommand(gate);
             Activate.Subscribe(
-                d =>
+                async d =>
                 {
                     Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    Model.Activate();
+                    await Model.ActivateAsync();
                 }
             );
 
@@ -116,10 +116,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             SelectFile.Subscribe(
                 async d =>
                 {
-                    if (d != null)
-                    {
-                        await Model.SelectFile(d as string);
-                    }
+                    await Model.SelectFile(d as string);
                 }
             );
             #endregion

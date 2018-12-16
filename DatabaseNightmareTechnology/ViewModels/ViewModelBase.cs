@@ -10,6 +10,9 @@ using Unity.Attributes;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// ViewModelクラスの共通親クラス
+    /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         #region PropertyChanged
