@@ -80,7 +80,7 @@ namespace DatabaseNightmareTechnology.ViewModels
 
             #region 値の連動設定
             SaveResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.SaveResult
+                m => m.ActionResult
                 );
             #endregion
 

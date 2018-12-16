@@ -203,7 +203,7 @@ namespace DatabaseNightmareTechnology.Models
                     }
                     catch (Exception e)
                     {
-                        SaveResult = $"接続に失敗したみたい:{e.Message}";
+                        ActionResult = $"接続に失敗したみたい:{e.Message}";
                     }
                     #endregion
                 }

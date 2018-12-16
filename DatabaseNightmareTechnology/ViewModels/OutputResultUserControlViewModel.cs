@@ -73,7 +73,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.Body
                 );
             DeleteResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.SaveResult
+                m => m.ActionResult
                 );
             #endregion
 

@@ -130,14 +130,14 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 // 設定を保存する
                 await Json.Save(SaveData, Constants.DataDirectory, Constants.DataFileName);
-                SaveResult = "チェックOK 保存完了";
+                ActionResult = "チェックOK 保存完了";
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 UserName = "このハゲー！";
                 Email = "ちーがーうーだーろー！？　違うだろーーッ！！";
-                SaveResult = "チェックNG";
+                ActionResult = "チェックNG";
             }
         }
 
@@ -164,7 +164,7 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 catch(Exception e)
                 {
-                    SaveResult = "このトークン、もう使えないみたいだぜ？：" + e.Message;
+                    ActionResult = "このトークン、もう使えないみたいだぜ？：" + e.Message;
                 }
             }
         }

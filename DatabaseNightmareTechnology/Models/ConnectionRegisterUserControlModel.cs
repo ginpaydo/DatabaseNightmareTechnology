@@ -240,7 +240,7 @@ namespace DatabaseNightmareTechnology.Models
             }
             catch (Exception e)
             {
-                SaveResult = "チェックNG:" + e.Message;
+                ActionResult = "チェックNG:" + e.Message;
             }
         }
 

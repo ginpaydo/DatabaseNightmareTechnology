@@ -86,7 +86,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.Email
                 ).ToReadOnlyReactiveProperty();
             CheckResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.SaveResult
+                m => m.ActionResult
                 ).ToReadOnlyReactiveProperty();
             #endregion
 

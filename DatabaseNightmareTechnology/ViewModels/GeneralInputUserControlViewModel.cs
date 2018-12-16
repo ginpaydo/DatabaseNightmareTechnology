@@ -75,7 +75,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.FileName
                 );
             SaveResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.SaveResult
+                m => m.ActionResult
                 );
             #endregion
 

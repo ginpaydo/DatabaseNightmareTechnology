@@ -73,7 +73,7 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task SelectDirectory(string value)
         {
-            SaveResult = MessageConstants.ActionResult;
+            ActionResult = MessageConstants.ActionResult;
             Directory = value;
 
             // 接続先データ読み込み（ディレクトリのファイル一覧を取得）

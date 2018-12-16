@@ -20,14 +20,14 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         protected SaveData SaveData { get; set; }
 
-        private string saveResult;
+        private string actionResult;
         /// <summary>
         /// 処理結果メッセージの表示
         /// </summary>
-        public string SaveResult
+        public string ActionResult
         {
-            get { return saveResult; }
-            set { SetProperty(ref saveResult, value); }
+            get { return actionResult; }
+            set { SetProperty(ref actionResult, value); }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace DatabaseNightmareTechnology.Models
         #region Initialize
         public ModelBase()
         {
-            SaveResult = MessageConstants.ActionResult;
+            ActionResult = MessageConstants.ActionResult;
             RequiredMessage = MessageConstants.NotInputFilename;
             SuccessMessage = MessageConstants.ActionSucceed;
         }
@@ -73,7 +73,7 @@ namespace DatabaseNightmareTechnology.Models
                 {
                     // OKならDropboxかローカルに保存
                     await DropboxHelper.MultiSaveAsync(SaveData.DataOutput, filename, data, Constants.ApplicationDirectoryDropbox + correspondencePath, SaveData.LocalDirectory + correspondencePath, SaveData.AccessToken);
-                    SaveResult = MessageConstants.ActionSucceed;
+                    ActionResult = MessageConstants.ActionSucceed;
 
                     // 成功したらリストに追加する
                     if (dataList != null)
@@ -87,13 +87,13 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 else
                 {
-                    SaveResult = RequiredMessage;
+                    ActionResult = RequiredMessage;
                     return false;
                 }
             }
             else
             {
-                SaveResult = MessageConstants.SaveDataNotFound;
+                ActionResult = MessageConstants.SaveDataNotFound;
                 return false;
             }
         }
@@ -114,7 +114,7 @@ namespace DatabaseNightmareTechnology.Models
                 {
                     // OKならDropboxかローカルに保存
                     await DropboxHelper.MultiSaveStringAsync(SaveData.DataOutput, filename, data, Constants.ApplicationDirectoryDropbox + correspondencePath, SaveData.LocalDirectory + correspondencePath, SaveData.AccessToken);
-                    SaveResult = MessageConstants.ActionSucceed;
+                    ActionResult = MessageConstants.ActionSucceed;
 
                     // 成功したらリストに追加する
                     if (dataList != null)
@@ -128,13 +128,13 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 else
                 {
-                    SaveResult = RequiredMessage;
+                    ActionResult = RequiredMessage;
                     return false;
                 }
             }
             else
             {
-                SaveResult = MessageConstants.SaveDataNotFound;
+                ActionResult = MessageConstants.SaveDataNotFound;
                 return false;
             }
         }
@@ -155,7 +155,7 @@ namespace DatabaseNightmareTechnology.Models
                 {
                     // OKならDropboxかローカルに保存
                     await DropboxHelper.MultiDeleteFileAsync(SaveData.DataOutput, filename, Constants.TrushDirectory, correspondencePath, Constants.ApplicationDirectoryDropbox, SaveData.LocalDirectory, SaveData.AccessToken);
-                    SaveResult = MessageConstants.ActionSucceed;
+                    ActionResult = MessageConstants.ActionSucceed;
 
                     // 成功したらリストから削除する
                     if (dataList != null)
@@ -169,13 +169,13 @@ namespace DatabaseNightmareTechnology.Models
                 }
                 else
                 {
-                    SaveResult = RequiredMessage;
+                    ActionResult = RequiredMessage;
                     return false;
                 }
             }
             else
             {
-                SaveResult = MessageConstants.SaveDataNotFound;
+                ActionResult = MessageConstants.SaveDataNotFound;
                 return false;
             }
         }
@@ -245,7 +245,7 @@ namespace DatabaseNightmareTechnology.Models
                 if (SaveData == null)
                 {
                     // セーブデータがない場合
-                    SaveResult = MessageConstants.SaveDataNotFound;
+                    ActionResult = MessageConstants.SaveDataNotFound;
                 }
             }
 

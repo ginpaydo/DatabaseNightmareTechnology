@@ -50,7 +50,7 @@ namespace DatabaseNightmareTechnology.Models
         /// </summary>
         public GeneralInputUserControlModel()
         {
-            SaveResult = "チェック結果";
+            ActionResult = "チェック結果";
         }
         #endregion
 

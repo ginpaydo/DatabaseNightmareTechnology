@@ -64,7 +64,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 m => m.FileName
                 );
             CheckResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.CheckResult
+                m => m.ActionResult
                 ).ToReadOnlyReactiveProperty();
             #endregion
 

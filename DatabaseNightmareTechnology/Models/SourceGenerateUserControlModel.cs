@@ -68,7 +68,7 @@ namespace DatabaseNightmareTechnology.Models
         {
             if (CheckRequiredFields())
             {
-                SaveResult = MessageConstants.NotChooseTemplate;
+                ActionResult = MessageConstants.NotChooseTemplate;
             }
             else
             {
@@ -100,7 +100,7 @@ namespace DatabaseNightmareTechnology.Models
                         {
                             await SimpleSaveString(Constants.OutputSourceDirectory, template.GenerateFileName, template.TemplateBody);
                             resultStr.Append("\nファイル名：" + template.GenerateFileName);
-                            SaveResult = resultStr.ToString();
+                            ActionResult = resultStr.ToString();
                         }
                         else
                         {
@@ -113,7 +113,7 @@ namespace DatabaseNightmareTechnology.Models
 
                             // 保存
                             await SimpleSaveString(Constants.OutputSourceDirectory, filename, result);
-                            SaveResult = resultStr.ToString();
+                            ActionResult = resultStr.ToString();
                         }
                     }
                     else
@@ -134,12 +134,12 @@ namespace DatabaseNightmareTechnology.Models
                             // 保存
                             await SimpleSaveString(Constants.OutputSourceDirectory, filename, result);
                         }
-                        SaveResult = resultStr.ToString();
+                        ActionResult = resultStr.ToString();
                     }
                 }
                 catch (Exception e)
                 {
-                    SaveResult = e.Message;
+                    ActionResult = e.Message;
                 }
             }
         }
