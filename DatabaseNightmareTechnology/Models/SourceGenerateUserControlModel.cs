@@ -68,10 +68,6 @@ namespace DatabaseNightmareTechnology.Models
         {
             if (CheckRequiredFields())
             {
-                ActionResult = MessageConstants.NotChooseTemplate;
-            }
-            else
-            {
                 try
                 {
                     // 実行結果
@@ -141,6 +137,10 @@ namespace DatabaseNightmareTechnology.Models
                 {
                     ActionResult = e.Message;
                 }
+            }
+            else
+            {
+                ActionResult = MessageConstants.NotChooseTemplate;
             }
         }
 
