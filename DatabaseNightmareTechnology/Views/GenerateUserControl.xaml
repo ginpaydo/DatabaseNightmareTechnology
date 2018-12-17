@@ -29,7 +29,7 @@
                     <i:Interaction.Triggers>
                         <!-- 選択したときの処理 -->
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding SelectFile}" CommandParameter="{Binding ElementName=FileList, Path=SelectedItem}" />
+                            <i:InvokeCommandAction Command="{Binding SelectFile}" CommandParameter="{Binding ElementName=DataList, Path=SelectedItem}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>

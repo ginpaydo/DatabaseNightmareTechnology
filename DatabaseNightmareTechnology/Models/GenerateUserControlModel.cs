@@ -186,7 +186,7 @@ namespace DatabaseNightmareTechnology.Models
                                             var end = $"_{table.KeyName}";
                                             if (item.Name.EndsWith(end))
                                             {
-                                                item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length);
+                                                item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
                                             }
                                         }
                                     }
@@ -204,129 +204,138 @@ namespace DatabaseNightmareTechnology.Models
                     catch (Exception e)
                     {
                         ActionResult = $"接続に失敗したみたい:{e.Message}";
+                        return;
                     }
                     #endregion
                 }
                 else if (connectionData.DatabaseEngine == DatabaseEngine.SqlServer)
                 {
                     #region SQLServer処理（もうクラス作らない）
-                    using (var connection = new SqlConnection(connectionData.ConnectionString))
+                    try
                     {
-                        connection.Open();
-
-                        // テーブル一覧取得
-                        var tablesData = ExecuteQuery(connection, "SELECT t.name, ep.value FROM sys.tables t, sys.extended_properties ep WHERE t.object_id = ep.major_id AND ep.minor_id = 0;");
-
-                        // キー情報（1テーブル1つのみ、それ以上は無視）
-                        var keyList = new Dictionary<string, string>();
-                        var tableKeyData = ExecuteQuery(connection, $"SELECT tbls.name AS table_name, cols.name AS col_name FROM sys.tables tbls INNER JOIN sys.key_constraints key_const ON tbls.object_id = key_const.parent_object_id AND key_const.type = 'PK' INNER JOIN sys.index_columns idx_cols ON key_const.parent_object_id = idx_cols.object_id AND key_const.unique_index_id = idx_cols.index_id INNER JOIN sys.columns cols ON idx_cols.object_id = cols.object_id AND idx_cols.column_id = cols.column_id");
-                        foreach (DataRow tableRow in tableKeyData.Rows)
+                        using (var connection = new SqlConnection(connectionData.ConnectionString))
                         {
-                            keyList.Add(tableRow["table_name"].ToString(), tableRow["col_name"].ToString());
-                        }
+                            connection.Open();
 
-                        // インデックス情報（キー以外）
-                        // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
-                        // 生テーブル名と生カラム名を格納
-                        var indexList = new Dictionary<string, List<string>>();
-                        var tableIndexData = ExecuteQuery(connection, $"SELECT sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.columns ON sys.columns.column_id = sys.index_columns.column_id AND sys.columns.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name,sys.index_columns.column_id;");
-                        foreach (DataRow tableRow in tableIndexData.Rows)
-                        {
-                            var tableName = tableRow["table_name"].ToString();
-                            var columnName = tableRow["column_name"].ToString();
-                            if (!indexList.Keys.Contains(tableName))
+                            // テーブル一覧取得
+                            var tablesData = ExecuteQuery(connection, "SELECT t.name, ep.value FROM sys.tables t, sys.extended_properties ep WHERE t.object_id = ep.major_id AND ep.minor_id = 0;");
+
+                            // キー情報（1テーブル1つのみ、それ以上は無視）
+                            var keyList = new Dictionary<string, string>();
+                            var tableKeyData = ExecuteQuery(connection, $"SELECT tbls.name AS table_name, cols.name AS col_name FROM sys.tables tbls INNER JOIN sys.key_constraints key_const ON tbls.object_id = key_const.parent_object_id AND key_const.type = 'PK' INNER JOIN sys.index_columns idx_cols ON key_const.parent_object_id = idx_cols.object_id AND key_const.unique_index_id = idx_cols.index_id INNER JOIN sys.columns cols ON idx_cols.object_id = cols.object_id AND idx_cols.column_id = cols.column_id");
+                            foreach (DataRow tableRow in tableKeyData.Rows)
                             {
-                                indexList.Add(tableName, new List<string>());
-                                ;
+                                keyList.Add(tableRow["table_name"].ToString(), tableRow["col_name"].ToString());
                             }
-                            // 重複は登録しない
-                            if (!indexList[tableName].Contains(columnName))
+
+                            // インデックス情報（キー以外）
+                            // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
+                            // 生テーブル名と生カラム名を格納
+                            var indexList = new Dictionary<string, List<string>>();
+                            var tableIndexData = ExecuteQuery(connection, $"SELECT sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.columns ON sys.columns.column_id = sys.index_columns.column_id AND sys.columns.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name,sys.index_columns.column_id;");
+                            foreach (DataRow tableRow in tableIndexData.Rows)
                             {
-                                indexList[tableName].Add(columnName);
+                                var tableName = tableRow["table_name"].ToString();
+                                var columnName = tableRow["column_name"].ToString();
+                                if (!indexList.Keys.Contains(tableName))
+                                {
+                                    indexList.Add(tableName, new List<string>());
+                                    ;
+                                }
+                                // 重複は登録しない
+                                if (!indexList[tableName].Contains(columnName))
+                                {
+                                    indexList[tableName].Add(columnName);
+                                }
                             }
-                        }
 
-                        // それぞれのテーブルに対する処理
-                        foreach (DataRow tableRow in tablesData.Rows)
-                        {
-                            var columns = new List<Column>();
-                            var table = new Table();
-                            // テーブル名
-                            table.RawName = tableRow["name"].ToString();
-                            table.Name = GetTableName(connectionData, table.RawName);
-                            table.NameCamel = table.Name.SnakeToLowerCamel();
-                            table.NamePascal = table.Name.SnakeToUpperCamel();
-
-                            // テーブルコメント
-                            table.Comment = tableRow["value"].ToString();
-
-                            // 各カラム情報
-                            var tableColumnCommentData = ExecuteQuery(connection, $"SELECT b.name as datatype, c.name, c.is_nullable, c.max_length, ep.value FROM sys.tables t, sys.types b, sys.columns c, sys.extended_properties ep WHERE c.system_type_id = b.system_type_id AND t.name = '{table.RawName}' AND t.object_id = c.object_id AND c.object_id = ep.major_id AND c.column_id = ep.minor_id;");
-
-                            // 各カラムごとの処理
-                            foreach (DataRow columnRow in tableColumnCommentData.Rows)
+                            // それぞれのテーブルに対する処理
+                            foreach (DataRow tableRow in tablesData.Rows)
                             {
-                                var column = new Column();
-                                column.Name = columnRow["name"].ToString();
-                                column.NameCamel = column.Name.SnakeToLowerCamel();
-                                column.NamePascal = column.Name.SnakeToUpperCamel();
+                                var columns = new List<Column>();
+                                var table = new Table();
+                                // テーブル名
+                                table.RawName = tableRow["name"].ToString();
+                                table.Name = GetTableName(connectionData, table.RawName);
+                                table.NameCamel = table.Name.SnakeToLowerCamel();
+                                table.NamePascal = table.Name.SnakeToUpperCamel();
 
-                                column.Comment = columnRow["value"].ToString();
-                                column.IsNullable = (bool)columnRow["is_nullable"];
-                                column.DataTypeRaw = columnRow["datatype"].ToString();
-                                column.Length = string.Empty;
-                                if (column.DataTypeRaw == "varchar") // 文字列型のみ
-                                {
-                                    column.Length = columnRow["max_length"].ToString();
-                                }
-                                column.DataType = GetDataType(column.DataTypeRaw);
+                                // テーブルコメント
+                                table.Comment = tableRow["value"].ToString();
 
-                                // キー情報（最初の1つだけ取得、複合キー非対応）
-                                column.IsKey = false;
-                                if (keyList.ContainsKey(table.RawName) && keyList[table.RawName] == column.Name)
-                                {
-                                    column.IsKey = true;
-                                }
-                                if (column.IsKey && string.IsNullOrEmpty(table.KeyName))
-                                {
-                                    table.KeyDataTypeRaw = column.DataTypeRaw;
-                                    table.KeyDataType = GetDataType(table.KeyDataTypeRaw);
-                                    table.KeyName = column.Name;
-                                    table.KeyNamePascal = column.NamePascal;
-                                    table.KeyNameCamel = column.NameCamel;
-                                }
+                                // 各カラム情報
+                                var tableColumnCommentData = ExecuteQuery(connection, $"SELECT b.name as datatype, c.name, c.is_nullable, c.max_length, ep.value FROM sys.tables t, sys.types b, sys.columns c, sys.extended_properties ep WHERE c.system_type_id = b.system_type_id AND t.name = '{table.RawName}' AND t.object_id = c.object_id AND c.object_id = ep.major_id AND c.column_id = ep.minor_id;");
 
-                                columns.Add(column);
-                            }
-                            // インデックス情報を設定
-                            foreach (var item in columns)
-                            {
-                                // テーブルに対するインデックスリスト参照
-                                if (indexList.Keys.Contains(table.RawName))
+                                // 各カラムごとの処理
+                                foreach (DataRow columnRow in tableColumnCommentData.Rows)
                                 {
-                                    // インデックスリストにそのカラム名があるか
-                                    if (indexList[table.RawName].Contains(item.Name))
+                                    var column = new Column();
+                                    column.Name = columnRow["name"].ToString();
+                                    column.NameCamel = column.Name.SnakeToLowerCamel();
+                                    column.NamePascal = column.Name.SnakeToUpperCamel();
+
+                                    column.Comment = columnRow["value"].ToString();
+                                    column.IsNullable = (bool)columnRow["is_nullable"];
+                                    column.DataTypeRaw = columnRow["datatype"].ToString();
+                                    column.Length = string.Empty;
+                                    if (column.DataTypeRaw == "varchar") // 文字列型のみ
                                     {
-                                        item.IndexClass = item.Name;
-                                        if (table.KeyName != null)
+                                        column.Length = columnRow["max_length"].ToString();
+                                    }
+                                    column.DataType = GetDataType(column.DataTypeRaw);
+
+                                    // キー情報（最初の1つだけ取得、複合キー非対応）
+                                    column.IsKey = false;
+                                    if (keyList.ContainsKey(table.RawName) && keyList[table.RawName] == column.Name)
+                                    {
+                                        column.IsKey = true;
+                                    }
+                                    if (column.IsKey && string.IsNullOrEmpty(table.KeyName))
+                                    {
+                                        table.KeyDataTypeRaw = column.DataTypeRaw;
+                                        table.KeyDataType = GetDataType(table.KeyDataTypeRaw);
+                                        table.KeyName = column.Name;
+                                        table.KeyNamePascal = column.NamePascal;
+                                        table.KeyNameCamel = column.NameCamel;
+                                    }
+
+                                    columns.Add(column);
+                                }
+                                // インデックス情報を設定
+                                foreach (var item in columns)
+                                {
+                                    // テーブルに対するインデックスリスト参照
+                                    if (indexList.Keys.Contains(table.RawName))
+                                    {
+                                        // インデックスリストにそのカラム名があるか
+                                        if (indexList[table.RawName].Contains(item.Name))
                                         {
-                                            var end = $"_{table.KeyName}";
-                                            if (item.Name.EndsWith(end))
+                                            item.IndexClass = item.Name;
+                                            if (table.KeyName != null)
                                             {
-                                                item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length);
+                                                var end = $"_{table.KeyName}";
+                                                if (item.Name.EndsWith(end))
+                                                {
+                                                    item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
+                                                }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        item.IndexClass = null;
+                                        else
+                                        {
+                                            item.IndexClass = null;
+                                        }
                                     }
                                 }
+                                table.Columns = columns;
+                                tables.Add(table);
                             }
-                            table.Columns = columns;
-                            tables.Add(table);
+                            MetaData.Tables = tables;
                         }
-                        MetaData.Tables = tables;
+                    }
+                    catch (Exception e)
+                    {
+                        ActionResult = $"接続に失敗したみたい:{e.Message}";
+                        return;
                     }
                     #endregion
                 }
