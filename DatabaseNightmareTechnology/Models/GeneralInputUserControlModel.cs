@@ -61,7 +61,10 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public async Task Save()
         {
-            await SimpleSave(Constants.GeneralInputDirectory, $"{FileName}{Constants.Extension}", FileList);
+            // 保存データ
+            var data = new GeneralInput(Items.ToList());
+
+            await SimpleSave(Constants.GeneralInputDirectory, $"{FileName}{Constants.Extension}", data, FileList);
         }
 
         /// <summary>
