@@ -87,7 +87,10 @@ namespace DatabaseNightmareTechnology.Models
         public async Task SelectFile(string value)
         {
             Filename = value;
-            Body = await SimpleLoadString(Directory, Filename);
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                Body = await SimpleLoadString(Directory, Filename);
+            }
         }
         #endregion
 
