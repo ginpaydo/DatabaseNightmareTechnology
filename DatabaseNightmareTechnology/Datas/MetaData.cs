@@ -42,22 +42,69 @@ namespace DatabaseNightmareTechnology
         /// カラム
         /// </summary>
         public List<Column> Columns { get; set; }
+
         /// <summary>
         /// プレフィクス付きの名前
         /// </summary>
         public string RawName { get; set; }
+
         /// <summary>
         /// プレフィクスを取った名前
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 名前Camel
+        /// </summary>
         public string NameCamel { get; set; }
+
+        /// <summary>
+        /// 名前Pascal
+        /// </summary>
         public string NamePascal { get; set; }
+        /// <summary>
+        /// コメント
+        /// </summary>
         public string Comment { get; set; }
-        public string KeyDataTypeRaw { get; set; } // DBの型（各言語によって異なるため）
-        public string KeyDataType { get; set; } // DBの型
+
+        // キー項目
+        /// <summary>
+        /// キー項目のDBの型
+        /// DBから取得したカッコつきの値を格納
+        /// </summary>
+        public string KeyDataTypeRaw { get; set; }
+
+        /// <summary>
+        /// キー項目のDBの型
+        /// カッコ除外
+        /// </summary>
+        public string KeyDataType { get; set; }
+
+        /// <summary>
+        /// キー項目の名前
+        /// </summary>
         public string KeyName { get; set; }
+
+        /// <summary>
+        /// キー項目の名前Camel
+        /// </summary>
         public string KeyNamePascal { get; set; }
+
+        /// <summary>
+        /// キー項目の名前Pascal
+        /// </summary>
         public string KeyNameCamel { get; set; }
+
+        // インデックス情報
+        /// <summary>
+        /// インデックスの種類ごとに項目を列挙
+        /// </summary>
+        public Dictionary<string, List<string>> Indexs { get; set; }
+
+        /// <summary>
+        /// 各インデックスに登場する項目を列挙
+        /// </summary>
+        public List<string> IndexColumns { get; set; }
     }
 
     /// <summary>
@@ -66,17 +113,17 @@ namespace DatabaseNightmareTechnology
     public class Column
     {
         /// <summary>
-        /// 名前
+        /// 元の名前
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 名前
+        /// 名前Camel
         /// </summary>
         public string NameCamel { get; set; }
 
         /// <summary>
-        /// 名前
+        /// 名前Pascal
         /// </summary>
         public string NamePascal { get; set; }
 
@@ -112,6 +159,7 @@ namespace DatabaseNightmareTechnology
 
         /// <summary>
         /// 他のテーブルのIDだったら、そのクラス名を入れる
+        /// PascalCase
         /// 例：user_auth -> UserAuth
         /// </summary>
         public string IndexClass { get; set; }

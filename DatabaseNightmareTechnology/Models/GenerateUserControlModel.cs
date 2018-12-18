@@ -119,6 +119,8 @@ namespace DatabaseNightmareTechnology.Models
                             {
                                 var columns = new List<Column>();
                                 var table = new Table();
+                                var indexList = new List<string>();
+                                var indexs = new Dictionary<string, List<string>>();
 
                                 // テーブル名
                                 table.RawName = tableRow[cName].ToString();
@@ -127,11 +129,17 @@ namespace DatabaseNightmareTechnology.Models
                                 table.NamePascal = table.Name.SnakeToUpperCamel();
 
                                 // インデックス情報を取得
-                                var indexList = new List<string>();
                                 var indexData = ExecuteQuery(connection, $"SHOW INDEX FROM {table.RawName};");
                                 foreach (DataRow row in indexData.Rows)
                                 {
+                                    var kn = row["Key_name"].ToString();
                                     var cn = row["Column_name"].ToString();
+                                    if (!indexs.ContainsKey(kn))
+                                    {
+                                        indexs.Add(kn, new List<string>());
+                                    }
+                                    indexs[kn].Add(cn);
+
                                     if (!indexList.Contains(cn))
                                     {
                                         indexList.Add(cn);
@@ -186,6 +194,7 @@ namespace DatabaseNightmareTechnology.Models
                                             var end = $"_{table.KeyName}";
                                             if (item.Name.EndsWith(end))
                                             {
+                                                // "_id"が付いていたら設定する
                                                 item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
                                             }
                                         }
@@ -196,6 +205,8 @@ namespace DatabaseNightmareTechnology.Models
                                     }
                                 }
                                 table.Columns = columns;
+                                table.IndexColumns = indexList;
+                                table.Indexs = indexs;
                                 tables.Add(table);
                             }
                             MetaData.Tables = tables;
@@ -231,21 +242,25 @@ namespace DatabaseNightmareTechnology.Models
                             // インデックス情報（キー以外）
                             // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
                             // 生テーブル名と生カラム名を格納
-                            var indexList = new Dictionary<string, List<string>>();
-                            var tableIndexData = ExecuteQuery(connection, $"SELECT sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.columns ON sys.columns.column_id = sys.index_columns.column_id AND sys.columns.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name,sys.index_columns.column_id;");
+                            var indexList = new List<string>();
+                            var indexs = new Dictionary<string, List<string>>();
+                            var tableIndexData = ExecuteQuery(connection, $"SELECT sys.indexes.name AS index_name, sys.index_columns.object_id, sys.index_columns.column_id, sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.index_id = sys.index_columns.index_id AND sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id INNER JOIN sys.columns ON sys.index_columns.object_id = sys.columns.object_id AND sys.index_columns.column_id = sys.columns.column_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name, sys.index_columns.column_id;");
                             foreach (DataRow tableRow in tableIndexData.Rows)
                             {
+                                var indexName = tableRow["index_name"].ToString();
                                 var tableName = tableRow["table_name"].ToString();
                                 var columnName = tableRow["column_name"].ToString();
-                                if (!indexList.Keys.Contains(tableName))
+
+                                if (!indexs.ContainsKey(indexName))
                                 {
-                                    indexList.Add(tableName, new List<string>());
-                                    ;
+                                    indexs.Add(indexName, new List<string>());
                                 }
+                                indexs[indexName].Add(columnName);
+
                                 // 重複は登録しない
-                                if (!indexList[tableName].Contains(columnName))
+                                if (!indexList.Contains(columnName))
                                 {
-                                    indexList[tableName].Add(columnName);
+                                    indexList.Add(columnName);
                                 }
                             }
 
@@ -304,29 +319,27 @@ namespace DatabaseNightmareTechnology.Models
                                 // インデックス情報を設定
                                 foreach (var item in columns)
                                 {
-                                    // テーブルに対するインデックスリスト参照
-                                    if (indexList.Keys.Contains(table.RawName))
+                                    // インデックスリストにそのカラム名があるか
+                                    if (indexList.Contains(item.Name))
                                     {
-                                        // インデックスリストにそのカラム名があるか
-                                        if (indexList[table.RawName].Contains(item.Name))
+                                        item.IndexClass = item.Name;
+                                        if (table.KeyName != null)
                                         {
-                                            item.IndexClass = item.Name;
-                                            if (table.KeyName != null)
+                                            var end = $"_{table.KeyName}";
+                                            if (item.Name.EndsWith(end))
                                             {
-                                                var end = $"_{table.KeyName}";
-                                                if (item.Name.EndsWith(end))
-                                                {
-                                                    item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
-                                                }
+                                                item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
                                             }
                                         }
-                                        else
-                                        {
-                                            item.IndexClass = null;
-                                        }
+                                    }
+                                    else
+                                    {
+                                        item.IndexClass = null;
                                     }
                                 }
                                 table.Columns = columns;
+                                table.IndexColumns = indexList;
+                                table.Indexs = indexs;
                                 tables.Add(table);
                             }
                             MetaData.Tables = tables;
