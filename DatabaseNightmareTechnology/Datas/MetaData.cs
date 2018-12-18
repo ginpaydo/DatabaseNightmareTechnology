@@ -98,11 +98,13 @@ namespace DatabaseNightmareTechnology
         // インデックス情報
         /// <summary>
         /// インデックスの種類ごとに項目を列挙
+        /// "_id"抜き、Pascal
         /// </summary>
         public Dictionary<string, List<string>> Indexs { get; set; }
 
         /// <summary>
         /// 各インデックスに登場する項目を列挙
+        /// "_id"抜き、Pascal
         /// </summary>
         public List<string> IndexColumns { get; set; }
     }

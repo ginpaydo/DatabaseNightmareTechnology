@@ -138,7 +138,7 @@ namespace DatabaseNightmareTechnology.Models
                                     {
                                         indexs.Add(kn, new List<string>());
                                     }
-                                    indexs[kn].Add(cn);
+                                    indexs[kn].Add(cn.SnakeToUpperCamel());
 
                                     if (!indexList.Contains(cn))
                                     {
@@ -204,8 +204,19 @@ namespace DatabaseNightmareTechnology.Models
                                         item.IndexClass = null;
                                     }
                                 }
+                                // インデックスのリストから"_id"を除去して登録
+                                var indexColumns = new List<string> ();
                                 table.Columns = columns;
-                                table.IndexColumns = indexList;
+                                foreach (var item in indexList)
+                                {
+                                    var end = $"_{table.KeyName}";
+                                    if (item.EndsWith(end))
+                                    {
+                                        item.Remove(item.Length - end.Length).SnakeToUpperCamel();
+                                        indexColumns.Add(item.Remove(item.Length - end.Length).SnakeToUpperCamel());
+                                    }
+                                }
+                                table.IndexColumns = indexColumns;
                                 table.Indexs = indexs;
                                 tables.Add(table);
                             }
@@ -255,7 +266,7 @@ namespace DatabaseNightmareTechnology.Models
                                 {
                                     indexs.Add(indexName, new List<string>());
                                 }
-                                indexs[indexName].Add(columnName);
+                                indexs[indexName].Add(columnName.SnakeToUpperCamel());
 
                                 // 重複は登録しない
                                 if (!indexList.Contains(columnName))
@@ -338,7 +349,19 @@ namespace DatabaseNightmareTechnology.Models
                                     }
                                 }
                                 table.Columns = columns;
-                                table.IndexColumns = indexList;
+                                // インデックスのリストから"_id"を除去して登録
+                                var indexColumns = new List<string>();
+                                table.Columns = columns;
+                                foreach (var item in indexList)
+                                {
+                                    var end = $"_{table.KeyName}";
+                                    if (item.EndsWith(end))
+                                    {
+                                        item.Remove(item.Length - end.Length).SnakeToUpperCamel();
+                                        indexColumns.Add(item.Remove(item.Length - end.Length).SnakeToUpperCamel());
+                                    }
+                                }
+                                table.IndexColumns = indexColumns;
                                 table.Indexs = indexs;
                                 tables.Add(table);
                             }

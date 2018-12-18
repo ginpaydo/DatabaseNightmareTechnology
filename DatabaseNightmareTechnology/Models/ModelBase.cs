@@ -237,6 +237,7 @@ namespace DatabaseNightmareTechnology.Models
         /// <returns></returns>
         public virtual async Task ActivateAsync()
         {
+            ActionResult = MessageConstants.ActionResult;
             if (UseSaveData)
             {
                 // データがあるかチェック
