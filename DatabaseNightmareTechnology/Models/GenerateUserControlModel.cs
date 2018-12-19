@@ -120,29 +120,10 @@ namespace DatabaseNightmareTechnology.Models
                                 var columns = new List<Column>();
                                 var table = new Table();
                                 var indexList = new List<string>();
-                                var indexs = new Dictionary<string, List<Element>>();
 
                                 // テーブル名
                                 table.RawName = tableRow[cName].ToString();
                                 table.Name = new Element(GetTableName(connectionData, table.RawName));
-
-                                // インデックス情報を取得
-                                var indexData = ExecuteQuery(connection, $"SHOW INDEX FROM {table.RawName};");
-                                foreach (DataRow row in indexData.Rows)
-                                {
-                                    var kn = row["Key_name"].ToString();
-                                    var cn = row["Column_name"].ToString();
-                                    if (!indexs.ContainsKey(kn))
-                                    {
-                                        indexs.Add(kn, new List<Element>());
-                                    }
-                                    indexs[kn].Add(new Element(cn));
-
-                                    if (!indexList.Contains(cn))
-                                    {
-                                        indexList.Add(cn);
-                                    }
-                                }
 
                                 // 各テーブルコメント
                                 var tableCommentData = ExecuteQuery(connection, $"show table status like '{table.RawName}'");
@@ -176,6 +157,32 @@ namespace DatabaseNightmareTechnology.Models
 
                                     columns.Add(column);
                                 }
+
+                                // キー情報確定後の処理
+                                // インデックス情報を取得
+                                var indexs = new Dictionary<string, List<Element>>();
+                                var indexData = ExecuteQuery(connection, $"SHOW INDEX FROM {table.RawName};");
+                                foreach (DataRow row in indexData.Rows)
+                                {
+                                    var kn = row["Key_name"].ToString();
+                                    var cn = row["Column_name"].ToString();
+                                    if (!indexs.ContainsKey(kn))
+                                    {
+                                        indexs.Add(kn, new List<Element>());
+                                    }
+
+                                    if (!indexList.Contains(cn))
+                                    {
+                                        indexList.Add(cn);
+                                    }
+
+                                    var end = $"_{table.KeyName.Raw}";
+                                    if (cn.EndsWith(end))
+                                    {
+                                        cn = cn.Remove(cn.Length - end.Length);
+                                    }
+                                    indexs[kn].Add(new Element(cn));
+                                }
                                 // インデックス情報を設定
                                 foreach (var item in columns)
                                 {
@@ -206,7 +213,6 @@ namespace DatabaseNightmareTechnology.Models
                                     var end = $"_{table.KeyName.Raw}";
                                     if (item.EndsWith(end))
                                     {
-                                        item.Remove(item.Length - end.Length).SnakeToUpperCamel();
                                         indexColumns.Add(new Element(item.Remove(item.Length - end.Length)));
                                     }
                                 }
@@ -242,31 +248,6 @@ namespace DatabaseNightmareTechnology.Models
                             foreach (DataRow tableRow in tableKeyData.Rows)
                             {
                                 keyList.Add(tableRow["table_name"].ToString(), tableRow["col_name"].ToString());
-                            }
-
-                            // インデックス情報（キー以外）
-                            // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
-                            // 生テーブル名と生カラム名を格納
-                            var indexList = new List<string>();
-                            var indexs = new Dictionary<string, List<Element>>();
-                            var tableIndexData = ExecuteQuery(connection, $"SELECT sys.indexes.name AS index_name, sys.index_columns.object_id, sys.index_columns.column_id, sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.index_id = sys.index_columns.index_id AND sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id INNER JOIN sys.columns ON sys.index_columns.object_id = sys.columns.object_id AND sys.index_columns.column_id = sys.columns.column_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name, sys.index_columns.column_id;");
-                            foreach (DataRow tableRow in tableIndexData.Rows)
-                            {
-                                var indexName = tableRow["index_name"].ToString();
-                                var tableName = tableRow["table_name"].ToString();
-                                var columnName = tableRow["column_name"].ToString();
-
-                                if (!indexs.ContainsKey(indexName))
-                                {
-                                    indexs.Add(indexName, new List<Element>());
-                                }
-                                indexs[indexName].Add(new Element(columnName));
-
-                                // 重複は登録しない
-                                if (!indexList.Contains(columnName))
-                                {
-                                    indexList.Add(columnName);
-                                }
                             }
 
                             // それぞれのテーブルに対する処理
@@ -315,6 +296,38 @@ namespace DatabaseNightmareTechnology.Models
 
                                     columns.Add(column);
                                 }
+                                // キー情報確定後の処理
+                                // インデックス情報（キー以外）
+                                // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
+                                // "_id"を抜いて格納
+                                var indexList = new List<string>();
+                                var indexs = new Dictionary<string, List<Element>>();
+                                var tableIndexData = ExecuteQuery(connection, $"SELECT sys.indexes.name AS index_name, sys.index_columns.object_id, sys.index_columns.column_id, sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.index_id = sys.index_columns.index_id AND sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id INNER JOIN sys.columns ON sys.index_columns.object_id = sys.columns.object_id AND sys.index_columns.column_id = sys.columns.column_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name, sys.index_columns.column_id;");
+                                foreach (DataRow row in tableIndexData.Rows)
+                                {
+                                    var indexName = row["index_name"].ToString();
+                                    var tableName = row["table_name"].ToString();
+                                    var columnName = row["column_name"].ToString();
+
+                                    if (!indexs.ContainsKey(indexName))
+                                    {
+                                        indexs.Add(indexName, new List<Element>());
+                                    }
+
+                                    // 重複は登録しない
+                                    if (!indexList.Contains(columnName))
+                                    {
+                                        indexList.Add(columnName);
+                                    }
+
+                                    var end = $"_{table.KeyName.Raw}";
+                                    if (columnName.EndsWith(end))
+                                    {
+                                        columnName = columnName.Remove(columnName.Length - end.Length);
+                                    }
+                                    indexs[indexName].Add(new Element(columnName));
+                                }
+
                                 // インデックス情報を設定
                                 foreach (var item in columns)
                                 {
@@ -345,7 +358,6 @@ namespace DatabaseNightmareTechnology.Models
                                     var end = $"_{table.KeyName.Raw}";
                                     if (item.EndsWith(end))
                                     {
-                                        item.Remove(item.Length - end.Length).SnakeToUpperCamel();
                                         indexColumns.Add(new Element(item.Remove(item.Length - end.Length)));
                                     }
                                 }
