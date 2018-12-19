@@ -30,6 +30,9 @@ namespace DatabaseNightmareTechnology
         }
     }
 
+    /// <summary>
+    /// テーブルデータ
+    /// </summary>
     public class Table
     {
         /// <summary>
@@ -51,17 +54,8 @@ namespace DatabaseNightmareTechnology
         /// <summary>
         /// プレフィクスを取った名前
         /// </summary>
-        public string Name { get; set; }
+        public Element Name { get; set; }
 
-        /// <summary>
-        /// 名前Camel
-        /// </summary>
-        public string NameCamel { get; set; }
-
-        /// <summary>
-        /// 名前Pascal
-        /// </summary>
-        public string NamePascal { get; set; }
         /// <summary>
         /// コメント
         /// </summary>
@@ -83,30 +77,20 @@ namespace DatabaseNightmareTechnology
         /// <summary>
         /// キー項目の名前
         /// </summary>
-        public string KeyName { get; set; }
-
-        /// <summary>
-        /// キー項目の名前Camel
-        /// </summary>
-        public string KeyNamePascal { get; set; }
-
-        /// <summary>
-        /// キー項目の名前Pascal
-        /// </summary>
-        public string KeyNameCamel { get; set; }
+        public Element KeyName { get; set; }
 
         // インデックス情報
         /// <summary>
         /// インデックスの種類ごとに項目を列挙
         /// "_id"抜き、Pascal
         /// </summary>
-        public Dictionary<string, List<string>> Indexs { get; set; }
+        public Dictionary<string, List<Element>> Indexs { get; set; }
 
         /// <summary>
         /// 各インデックスに登場する項目を列挙
         /// "_id"抜き、Pascal
         /// </summary>
-        public List<string> IndexColumns { get; set; }
+        public List<Element> IndexColumns { get; set; }
     }
 
     /// <summary>
@@ -117,17 +101,7 @@ namespace DatabaseNightmareTechnology
         /// <summary>
         /// 元の名前
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 名前Camel
-        /// </summary>
-        public string NameCamel { get; set; }
-
-        /// <summary>
-        /// 名前Pascal
-        /// </summary>
-        public string NamePascal { get; set; }
+        public Element Name { get; set; }
 
         /// <summary>
         /// 型（DBの型）カッコ付きなので注意
@@ -168,4 +142,46 @@ namespace DatabaseNightmareTechnology
 
     }
 
+
+    /// <summary>
+    /// 要素名
+    /// 様々な形の名前を持つ
+    /// </summary>
+    public class Element
+    {
+        private string raw;
+        /// <summary>
+        /// 元の名前
+        /// SnakeCase
+        /// </summary>
+        public string Raw
+        {
+            get { return raw; }
+            set
+            {
+                raw = value;
+                Camel = value.SnakeToLowerCamel();
+                Pascal = value.SnakeToUpperCamel();
+            }
+        }
+        /// <summary>
+        /// CamelCase
+        /// </summary>
+        public string Camel { get; private set; }
+
+        /// <summary>
+        /// PascalCase
+        /// </summary>
+        public string Pascal { get; private set; }
+
+        public Element()
+        {
+            // なにもなし
+        }
+
+        public Element(string raw)
+        {
+            Raw = raw;
+        }
+    }
 }

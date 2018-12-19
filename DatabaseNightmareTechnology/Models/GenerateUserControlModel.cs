@@ -120,13 +120,11 @@ namespace DatabaseNightmareTechnology.Models
                                 var columns = new List<Column>();
                                 var table = new Table();
                                 var indexList = new List<string>();
-                                var indexs = new Dictionary<string, List<string>>();
+                                var indexs = new Dictionary<string, List<Element>>();
 
                                 // テーブル名
                                 table.RawName = tableRow[cName].ToString();
-                                table.Name = GetTableName(connectionData, table.RawName);
-                                table.NameCamel = table.Name.SnakeToLowerCamel();
-                                table.NamePascal = table.Name.SnakeToUpperCamel();
+                                table.Name = new Element(GetTableName(connectionData, table.RawName));
 
                                 // インデックス情報を取得
                                 var indexData = ExecuteQuery(connection, $"SHOW INDEX FROM {table.RawName};");
@@ -136,9 +134,9 @@ namespace DatabaseNightmareTechnology.Models
                                     var cn = row["Column_name"].ToString();
                                     if (!indexs.ContainsKey(kn))
                                     {
-                                        indexs.Add(kn, new List<string>());
+                                        indexs.Add(kn, new List<Element>());
                                     }
-                                    indexs[kn].Add(cn.SnakeToUpperCamel());
+                                    indexs[kn].Add(new Element(cn));
 
                                     if (!indexList.Contains(cn))
                                     {
@@ -160,9 +158,7 @@ namespace DatabaseNightmareTechnology.Models
                                 foreach (DataRow commentRow in tableColumnCommentData.Rows)
                                 {
                                     var column = new Column();
-                                    column.Name = commentRow["Field"].ToString();
-                                    column.NameCamel = column.Name.SnakeToLowerCamel();
-                                    column.NamePascal = column.Name.SnakeToUpperCamel();
+                                    column.Name = new Element(commentRow["Field"].ToString());
                                     column.IsKey = !string.IsNullOrEmpty(commentRow["Key"].ToString()) && commentRow["Key"].ToString() == "PRI";
                                     column.Comment = commentRow["Comment"].ToString();
                                     column.IsNullable = commentRow["Null"].ToString() == "YES";
@@ -171,13 +167,11 @@ namespace DatabaseNightmareTechnology.Models
                                     column.DataType = GetDataType(column.DataTypeRaw);
 
                                     // キー情報（最初の1つだけ取得、複合キー非対応）
-                                    if (column.IsKey && string.IsNullOrEmpty(table.KeyName))
+                                    if (column.IsKey && table.KeyName == null)
                                     {
                                         table.KeyDataTypeRaw = column.DataTypeRaw;
                                         table.KeyDataType = GetDataType(table.KeyDataTypeRaw);
-                                        table.KeyName = column.Name;
-                                        table.KeyNamePascal = column.NamePascal;
-                                        table.KeyNameCamel = column.NameCamel;
+                                        table.KeyName = new Element(column.Name.Raw);
                                     }
 
                                     columns.Add(column);
@@ -186,13 +180,13 @@ namespace DatabaseNightmareTechnology.Models
                                 foreach (var item in columns)
                                 {
                                     // インデックスリストにそのカラム名があるか
-                                    if (indexList.Contains(item.Name))
+                                    if (indexList.Contains(item.Name.Raw))
                                     {
-                                        item.IndexClass = item.Name;
+                                        item.IndexClass = item.Name.Raw;
                                         if (table.KeyName != null)
                                         {
-                                            var end = $"_{table.KeyName}";
-                                            if (item.Name.EndsWith(end))
+                                            var end = $"_{table.KeyName.Raw}";
+                                            if (item.Name.Raw.EndsWith(end))
                                             {
                                                 // "_id"が付いていたら設定する
                                                 item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
@@ -205,15 +199,15 @@ namespace DatabaseNightmareTechnology.Models
                                     }
                                 }
                                 // インデックスのリストから"_id"を除去して登録
-                                var indexColumns = new List<string> ();
+                                var indexColumns = new List<Element> ();
                                 table.Columns = columns;
                                 foreach (var item in indexList)
                                 {
-                                    var end = $"_{table.KeyName}";
+                                    var end = $"_{table.KeyName.Raw}";
                                     if (item.EndsWith(end))
                                     {
                                         item.Remove(item.Length - end.Length).SnakeToUpperCamel();
-                                        indexColumns.Add(item.Remove(item.Length - end.Length).SnakeToUpperCamel());
+                                        indexColumns.Add(new Element(item.Remove(item.Length - end.Length)));
                                     }
                                 }
                                 table.IndexColumns = indexColumns;
@@ -254,7 +248,7 @@ namespace DatabaseNightmareTechnology.Models
                             // 親テーブル名はID名で特定する（user_authority_id -> tt_user_authority）
                             // 生テーブル名と生カラム名を格納
                             var indexList = new List<string>();
-                            var indexs = new Dictionary<string, List<string>>();
+                            var indexs = new Dictionary<string, List<Element>>();
                             var tableIndexData = ExecuteQuery(connection, $"SELECT sys.indexes.name AS index_name, sys.index_columns.object_id, sys.index_columns.column_id, sys.objects.name AS table_name, sys.columns.name AS column_name FROM sys.indexes INNER JOIN sys.index_columns ON sys.indexes.index_id = sys.index_columns.index_id AND sys.indexes.object_id = sys.index_columns.object_id INNER JOIN sys.objects ON sys.indexes.object_id = sys.objects.object_id INNER JOIN sys.columns ON sys.index_columns.object_id = sys.columns.object_id AND sys.index_columns.column_id = sys.columns.column_id WHERE sys.objects.type = 'U' ORDER BY sys.indexes.object_id, sys.indexes.name, sys.index_columns.column_id;");
                             foreach (DataRow tableRow in tableIndexData.Rows)
                             {
@@ -264,9 +258,9 @@ namespace DatabaseNightmareTechnology.Models
 
                                 if (!indexs.ContainsKey(indexName))
                                 {
-                                    indexs.Add(indexName, new List<string>());
+                                    indexs.Add(indexName, new List<Element>());
                                 }
-                                indexs[indexName].Add(columnName.SnakeToUpperCamel());
+                                indexs[indexName].Add(new Element(columnName));
 
                                 // 重複は登録しない
                                 if (!indexList.Contains(columnName))
@@ -282,9 +276,7 @@ namespace DatabaseNightmareTechnology.Models
                                 var table = new Table();
                                 // テーブル名
                                 table.RawName = tableRow["name"].ToString();
-                                table.Name = GetTableName(connectionData, table.RawName);
-                                table.NameCamel = table.Name.SnakeToLowerCamel();
-                                table.NamePascal = table.Name.SnakeToUpperCamel();
+                                table.Name = new Element(GetTableName(connectionData, table.RawName));
 
                                 // テーブルコメント
                                 table.Comment = tableRow["value"].ToString();
@@ -296,9 +288,7 @@ namespace DatabaseNightmareTechnology.Models
                                 foreach (DataRow columnRow in tableColumnCommentData.Rows)
                                 {
                                     var column = new Column();
-                                    column.Name = columnRow["name"].ToString();
-                                    column.NameCamel = column.Name.SnakeToLowerCamel();
-                                    column.NamePascal = column.Name.SnakeToUpperCamel();
+                                    column.Name = new Element(columnRow["name"].ToString());
 
                                     column.Comment = columnRow["value"].ToString();
                                     column.IsNullable = (bool)columnRow["is_nullable"];
@@ -312,17 +302,15 @@ namespace DatabaseNightmareTechnology.Models
 
                                     // キー情報（最初の1つだけ取得、複合キー非対応）
                                     column.IsKey = false;
-                                    if (keyList.ContainsKey(table.RawName) && keyList[table.RawName] == column.Name)
+                                    if (keyList.ContainsKey(table.RawName) && keyList[table.RawName] == column.Name.Raw)
                                     {
                                         column.IsKey = true;
                                     }
-                                    if (column.IsKey && string.IsNullOrEmpty(table.KeyName))
+                                    if (column.IsKey && table.KeyName == null)
                                     {
                                         table.KeyDataTypeRaw = column.DataTypeRaw;
                                         table.KeyDataType = GetDataType(table.KeyDataTypeRaw);
-                                        table.KeyName = column.Name;
-                                        table.KeyNamePascal = column.NamePascal;
-                                        table.KeyNameCamel = column.NameCamel;
+                                        table.KeyName = new Element(column.Name.Raw);
                                     }
 
                                     columns.Add(column);
@@ -331,13 +319,13 @@ namespace DatabaseNightmareTechnology.Models
                                 foreach (var item in columns)
                                 {
                                     // インデックスリストにそのカラム名があるか
-                                    if (indexList.Contains(item.Name))
+                                    if (indexList.Contains(item.Name.Raw))
                                     {
-                                        item.IndexClass = item.Name;
+                                        item.IndexClass = item.Name.Raw;
                                         if (table.KeyName != null)
                                         {
-                                            var end = $"_{table.KeyName}";
-                                            if (item.Name.EndsWith(end))
+                                            var end = $"_{table.KeyName.Raw}";
+                                            if (item.Name.Raw.EndsWith(end))
                                             {
                                                 item.IndexClass = item.IndexClass.Remove(item.IndexClass.Length - end.Length).SnakeToUpperCamel();
                                             }
@@ -350,15 +338,15 @@ namespace DatabaseNightmareTechnology.Models
                                 }
                                 table.Columns = columns;
                                 // インデックスのリストから"_id"を除去して登録
-                                var indexColumns = new List<string>();
+                                var indexColumns = new List<Element>();
                                 table.Columns = columns;
                                 foreach (var item in indexList)
                                 {
-                                    var end = $"_{table.KeyName}";
+                                    var end = $"_{table.KeyName.Raw}";
                                     if (item.EndsWith(end))
                                     {
                                         item.Remove(item.Length - end.Length).SnakeToUpperCamel();
-                                        indexColumns.Add(item.Remove(item.Length - end.Length).SnakeToUpperCamel());
+                                        indexColumns.Add(new Element(item.Remove(item.Length - end.Length)));
                                     }
                                 }
                                 table.IndexColumns = indexColumns;
