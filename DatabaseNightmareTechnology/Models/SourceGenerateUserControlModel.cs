@@ -1,5 +1,7 @@
 ﻿using RazorEngine;
+using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using RazorEngine.Text;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 namespace DatabaseNightmareTechnology.Models
 {
     /// <summary>
-    /// 出力結果
+    /// ソース生成
     /// </summary>
     class SourceGenerateUserControlModel : ModelBase
     {
@@ -203,6 +205,12 @@ namespace DatabaseNightmareTechnology.Models
             await SimpleFileList(Constants.TemplateDirectory, TemplateList);
             await SimpleFileList(Constants.MetaDataDirectory, ConnectionList);
             await SimpleFileList(Constants.GeneralInputDirectory, GeneralList);
+
+            // エンジンの設定
+            var config = new TemplateServiceConfiguration();
+            config.EncodedStringFactory = new RawStringFactory(); // HTMLエンコードしない
+            var myConfiguredTemplateService = RazorEngineService.Create(config);
+            Engine.Razor = myConfiguredTemplateService;
         }
         #endregion
     }
