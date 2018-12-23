@@ -201,17 +201,15 @@ namespace DatabaseNightmareTechnology
             var strValues = new StringBuilder();
             foreach (var item in list)
             {
-                if (!string.IsNullOrWhiteSpace(item))
+                if (strValues.Length > 0)
                 {
-                    if (strValues.Length > 0)
-                    {
-                        strValues.Append(Separator);
-                    }
-                    strValues.Append(item);
+                    strValues.Append(Separator);
                 }
+                var str = item.Trim('\"').Replace("\"\"", "\"");    // ダブルクォーテーション処理
+                strValues.Append(str);
             }
 
-            return strValues.ToString();
+            return strValues.ToString().Trim(',');  // 1行ごとにデータ長は変わる
         }
     }
 
