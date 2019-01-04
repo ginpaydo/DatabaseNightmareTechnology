@@ -3,21 +3,14 @@ using Prism.Logging;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// 出力結果
+    /// </summary>
     class OutputResultUserControlViewModel : ViewModelBase
     {
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private OutputResultUserControlModel Model;
-
         #region ReactiveProperty
 
         /// <summary>
@@ -35,18 +28,9 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// </summary>
         public ReactiveProperty<string> Body { get; }
 
-        /// <summary>
-        /// ファイル内容
-        /// </summary>
-        public ReactiveProperty<string> DeleteResult { get; }
-
         #endregion
 
         #region Command
-        /// <summary>
-        /// 表示したときの処理
-        /// </summary>
-        public ReactiveCommand Activate { get; }
         /// <summary>
         /// 削除ボタン処理
         /// </summary>
@@ -63,23 +47,19 @@ namespace DatabaseNightmareTechnology.ViewModels
 
 
         public OutputResultUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("OutputResultUserControlViewModel", loggerFacade)
+            : base(new OutputResultUserControlModel(), "出力結果", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new OutputResultUserControlModel();
+            var model = Model as OutputResultUserControlModel;
 
             #region 値の連動設定
-            Body = Model.ToReactivePropertyAsSynchronized(
+            Body = model.ToReactivePropertyAsSynchronized(
                 m => m.Body
-                );
-            DeleteResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.ActionResult
                 );
             #endregion
 
             #region リストの連動設定
-            DirectoryList = Model.DirectoryList.ToReadOnlyReactiveCollection();
-            FileList = Model.FileList.ToReadOnlyReactiveCollection();
+            DirectoryList = model.DirectoryList.ToReadOnlyReactiveCollection();
+            FileList = model.FileList.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -91,16 +71,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             Delete.Subscribe(
                 async d =>
                 {
-                    await Model.DeleteAsync();
-                }
-            );
-
-            Activate = new ReactiveCommand(gate);
-            Activate.Subscribe(
-                async d =>
-                {
-                    Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
+                    await model.DeleteAsync();
                 }
             );
 
@@ -108,7 +79,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             SelectDirectory.Subscribe(
                 async d =>
                 {
-                    await Model.SelectDirectory(d as string);
+                    await model.SelectDirectory(d as string);
                 }
             );
 
@@ -116,7 +87,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             SelectFile.Subscribe(
                 async d =>
                 {
-                    await Model.SelectFile(d as string);
+                    await model.SelectFile(d as string);
                 }
             );
             #endregion

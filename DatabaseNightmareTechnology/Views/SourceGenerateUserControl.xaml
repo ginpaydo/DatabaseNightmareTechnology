@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:local="clr-namespace:DatabaseNightmareTechnology.Views"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -61,7 +60,7 @@
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto"
                 materialDesign:HintAssist.Hint="結果："
-                Text="{Binding SaveResult.Value}"
+                Text="{Binding ActionResult.Value}"
                 IsReadOnly="True"/>
         </StackPanel>
     </Grid>

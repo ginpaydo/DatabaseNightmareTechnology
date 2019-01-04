@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:DatabaseNightmareTechnology.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:c="clr-namespace:DatabaseNightmareTechnology"
@@ -28,10 +27,10 @@
         <StackPanel Margin="10">
             <Label Content="設定" HorizontalAlignment="Left" Margin="0" FontSize="22" FontWeight="Bold"/>
             <Label Content="★利用する方にチェックしてくれ" HorizontalAlignment="Left" Margin="0,10,0,0" FontSize="14" FontWeight="Bold"/>
-            <StackPanel Orientation="Horizontal">
+            <DockPanel>
                 <RadioButton Content="Dropbox" Margin="0,0,0,0" GroupName="Dropbox" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Dropbox}"/>
                 <RadioButton Content="ローカル" Margin="20,0,0,0" GroupName="Local" IsChecked="{Binding DataOutputValue.Value, Converter={StaticResource DataOutput}, ConverterParameter=Local}"/>
-            </StackPanel>
+            </DockPanel>
             <Label Content="■ローカル" HorizontalAlignment="Left" Margin="0,10,0,0" FontSize="14" FontWeight="Bold"/>
             <DockPanel Margin="0,0,10,0">
                 <Label Content="使用ディレクトリ：" HorizontalAlignment="Left" Margin="0"/>
@@ -41,19 +40,19 @@
             <Label Content="Dropbox/アプリ/BestNox/" HorizontalAlignment="Left" Margin="0"/>
             <Label Content="■Dropbox" HorizontalAlignment="Left" Margin="0,10,0,0" FontSize="14" FontWeight="Bold"/>
             <DockPanel Margin="0,0,10,0">
-                <Label Content="Access Token：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <Label Content="Access Token：" HorizontalAlignment="Left"/>
                 <TextBox Margin="0" TextWrapping="Wrap" Text="{Binding AccessToken.Value}" VerticalContentAlignment="Center"/>
             </DockPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="お前がDropboxに登録している名前：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                <Label Content="{Binding UserName.Value}" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="お前のメールアドレス：" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                <Label Content="{Binding Email.Value}" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-            </StackPanel>
+            <DockPanel>
+                <Label Content="お前がDropboxに登録している名前：" HorizontalAlignment="Left"/>
+                <Label Content="{Binding UserName.Value}" HorizontalAlignment="Left"/>
+            </DockPanel>
+            <DockPanel>
+                <Label Content="お前のメールアドレス：" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Email.Value}" HorizontalAlignment="Left"/>
+            </DockPanel>
             <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+            <Label Content="{Binding ActionResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
         </StackPanel>
 
     </Grid>

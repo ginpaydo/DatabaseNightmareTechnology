@@ -63,7 +63,7 @@
             Text="{Binding TemplateBody.Value}"/>
         <StackPanel Grid.Row="2">
             <Button Content="保存" Command="{Binding Save}" CommandParameter="{Binding ElementName=FileList, Path=SelectedItem}" HorizontalAlignment="Right" Margin="0,5,5,5"/>
-            <Label Content="{Binding SaveResult.Value}" HorizontalAlignment="Right"/>
+            <Label Content="{Binding ActionResult.Value}" HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>
 </UserControl>

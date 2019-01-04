@@ -39,7 +39,7 @@
                 <TextBox Margin="0" MaxLength="100" TextWrapping="Wrap" Text="{Binding FileName.Value}"/>
             </DockPanel>
             <Button Content="生成" Command="{Binding Generate}" HorizontalAlignment="Right" Margin="10,20,0,0"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+            <Label Content="{Binding ActionResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
         </StackPanel>
     </Grid>
 </UserControl>

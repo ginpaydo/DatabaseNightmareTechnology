@@ -3,21 +3,14 @@ using Prism.Logging;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// Dropbox設定
+    /// </summary>
     class DropboxSettingsUserControlViewModel : ViewModelBase
     {
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private DropboxSettingsUserControlModel Model;
-
         #region ReactiveProperty
         /// <summary>
         /// トークン
@@ -44,17 +37,9 @@ namespace DatabaseNightmareTechnology.ViewModels
         /// </summary>
         public ReadOnlyReactiveProperty<string> Email { get; }
 
-        /// <summary>
-        /// チェック結果
-        /// </summary>
-        public ReadOnlyReactiveProperty<string> CheckResult { get; }
         #endregion
 
         #region Command
-        /// <summary>
-        /// 表示したときの処理
-        /// </summary>
-        public ReactiveCommand Activate { get; }
         /// <summary>
         /// ボタン処理
         /// </summary>
@@ -62,31 +47,27 @@ namespace DatabaseNightmareTechnology.ViewModels
         #endregion
 
         public DropboxSettingsUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("DropboxSettingsUserControlViewModel", loggerFacade)
+            : base(new DropboxSettingsUserControlModel(), "Dropbox設定", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new DropboxSettingsUserControlModel();
+            var model = Model as DropboxSettingsUserControlModel;
 
             #region 値の連動設定
-            AccessToken = Model.ToReactivePropertyAsSynchronized(
+            AccessToken = model.ToReactivePropertyAsSynchronized(
                 m => m.AccessToken
                 );
-            LocalDirectory = Model.ToReactivePropertyAsSynchronized(
+            LocalDirectory = model.ToReactivePropertyAsSynchronized(
                 m => m.LocalDirectory
                 );
-            DataOutputValue = Model.ToReactivePropertyAsSynchronized(
+            DataOutputValue = model.ToReactivePropertyAsSynchronized(
                 m => m.DataOutput,
                 x => x,
                 s => s
                 );
-            UserName = Model.ToReactivePropertyAsSynchronized(
+            UserName = model.ToReactivePropertyAsSynchronized(
                 m => m.UserName
                 ).ToReadOnlyReactiveProperty();
-            Email = Model.ToReactivePropertyAsSynchronized(
+            Email = model.ToReactivePropertyAsSynchronized(
                 m => m.Email
-                ).ToReadOnlyReactiveProperty();
-            CheckResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.ActionResult
                 ).ToReadOnlyReactiveProperty();
             #endregion
 
@@ -100,16 +81,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 async d =>
                 {
                     Log.Log($"設定ファイルを保存", Category.Info, Priority.None);
-                    await Model.CheckAndSave();
-                }
-            );
-
-            Activate = new ReactiveCommand(gate);
-            Activate.Subscribe(
-                async d =>
-                {
-                    Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
+                    await model.CheckAndSave();
                 }
             );
             #endregion

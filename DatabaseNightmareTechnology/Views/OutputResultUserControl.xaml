@@ -71,7 +71,7 @@
                 IsReadOnly="True"/>
 
         <StackPanel Grid.Row="2">
-            <Label Content="{Binding DeleteResult.Value}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+            <Label Content="{Binding ActionResult.Value}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
         </StackPanel>
     </Grid>
 </UserControl>

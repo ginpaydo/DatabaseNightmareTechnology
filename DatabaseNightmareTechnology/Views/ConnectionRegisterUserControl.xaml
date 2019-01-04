@@ -86,7 +86,7 @@
                 </Border>
             </DockPanel>
             <Button Content="チェック＆保存" Command="{Binding CheckAndSave}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
-            <Label Content="{Binding CheckResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" />
+            <Label Content="{Binding ActionResult.Value}" HorizontalAlignment="Right" Margin="10,0,0,0" />
             <DockPanel Margin="0,0,0,0">
                 <Label Content="接続文字列：" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>
                 <Label Content="{Binding ConnectionString.Value}" HorizontalAlignment="Left" Margin="0,0,0,0"  VerticalAlignment="Bottom"/>

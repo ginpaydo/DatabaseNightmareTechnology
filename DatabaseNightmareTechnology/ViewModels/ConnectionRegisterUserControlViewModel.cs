@@ -3,21 +3,14 @@ using Prism.Logging;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// 接続先登録
+    /// </summary>
     class ConnectionRegisterUserControlViewModel : ViewModelBase
     {
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private ConnectionRegisterUserControlModel Model;
-
         #region ReactiveProperty
         /// <summary>
         /// データベースの種類
@@ -75,11 +68,6 @@ namespace DatabaseNightmareTechnology.ViewModels
         public ReadOnlyReactiveCollection<string> CommonColumnList { get; private set; }
 
         /// <summary>
-        /// チェック結果
-        /// </summary>
-        public ReadOnlyReactiveProperty<string> CheckResult { get; }
-
-        /// <summary>
         /// 接続文字列
         /// </summary>
         public ReadOnlyReactiveProperty<string> ConnectionString { get; }
@@ -87,10 +75,6 @@ namespace DatabaseNightmareTechnology.ViewModels
         #endregion
 
         #region Command
-        /// <summary>
-        /// 表示したときの処理
-        /// </summary>
-        public ReactiveCommand Activate { get; }
         /// <summary>
         /// プレフィクス追加ボタン処理
         /// </summary>
@@ -114,51 +98,47 @@ namespace DatabaseNightmareTechnology.ViewModels
         #endregion
 
         public ConnectionRegisterUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("ConnectionRegisterUserControlViewModel", loggerFacade)
+            : base(new ConnectionRegisterUserControlModel(), "接続先登録", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new ConnectionRegisterUserControlModel();
+            var model = Model as ConnectionRegisterUserControlModel;
 
             #region 値の連動設定
-            DatabaseEngine = Model.ToReactivePropertyAsSynchronized(
+            DatabaseEngine = model.ToReactivePropertyAsSynchronized(
                 m => m.DatabaseEngine
                 );
-            Title = Model.ToReactivePropertyAsSynchronized(
+            Title = model.ToReactivePropertyAsSynchronized(
                 m => m.Title
                 );
-            Host = Model.ToReactivePropertyAsSynchronized(
+            Host = model.ToReactivePropertyAsSynchronized(
                 m => m.Host
                 );
-            Port = Model.ToReactivePropertyAsSynchronized(
+            Port = model.ToReactivePropertyAsSynchronized(
                 m => m.Port
                 );
-            DbName = Model.ToReactivePropertyAsSynchronized(
+            DbName = model.ToReactivePropertyAsSynchronized(
                 m => m.DbName
                 );
-            Account = Model.ToReactivePropertyAsSynchronized(
+            Account = model.ToReactivePropertyAsSynchronized(
                 m => m.Account
                 );
-            Password = Model.ToReactivePropertyAsSynchronized(
+            Password = model.ToReactivePropertyAsSynchronized(
                 m => m.Password
                 );
-            InputPrefix = Model.ToReactivePropertyAsSynchronized(
+            InputPrefix = model.ToReactivePropertyAsSynchronized(
                 m => m.InputPrefix
                 );
-            InputCommonColumn = Model.ToReactivePropertyAsSynchronized(
+            InputCommonColumn = model.ToReactivePropertyAsSynchronized(
                 m => m.InputCommonColumn
                 );
-            CheckResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.ActionResult
-                ).ToReadOnlyReactiveProperty();
-            ConnectionString = Model.ToReactivePropertyAsSynchronized(
+            ConnectionString = model.ToReactivePropertyAsSynchronized(
                 m => m.ConnectionString
                 ).ToReadOnlyReactiveProperty();
             #endregion
 
             #region リストの連動設定
-            PrefixList = Model.PrefixList.ToReadOnlyReactiveCollection();
+            PrefixList = model.PrefixList.ToReadOnlyReactiveCollection();
 
-            CommonColumnList = Model.CommonColumnList.ToReadOnlyReactiveCollection();
+            CommonColumnList = model.CommonColumnList.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -171,7 +151,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 async d =>
                 {
                     Log.Log($"接続先ファイルを保存", Category.Info, Priority.None);
-                    await Model.CheckAndSave();
+                    await model.CheckAndSave();
                 }
             );
 
@@ -179,7 +159,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             AddPrefix.Subscribe(
                 d =>
                 {
-                    Model.AddPrefix();
+                    model.AddPrefix();
                 }
             );
 
@@ -187,7 +167,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             DeletePrefix.Subscribe(
                 d =>
                 {
-                    Model.DeletePrefix(d as string);
+                    model.DeletePrefix(d as string);
                 }
             );
 
@@ -195,7 +175,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             AddCommonColumn.Subscribe(
                 d =>
                 {
-                    Model.AddCommonColumn();
+                    model.AddCommonColumn();
                 }
             );
 
@@ -203,16 +183,7 @@ namespace DatabaseNightmareTechnology.ViewModels
             DeleteCommonColumn.Subscribe(
                 d =>
                 {
-                    Model.DeleteCommonColumn(d as string);
-                }
-            );
-
-            Activate = new ReactiveCommand(gate);
-            Activate.Subscribe(
-                async d =>
-                {
-                    Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
+                    model.DeleteCommonColumn(d as string);
                 }
             );
             #endregion

@@ -10,7 +10,7 @@ namespace DatabaseNightmareTechnology
     /// </summary>
     public class GeneralInput
     {
-        public static char Separator = '#';
+        public const char Separator = '#';
         public Dictionary<string, List<string>> Values { get; set; }
         public Dictionary<string, Dictionary<string, List<string>>> ListedValues { get; set; }
 

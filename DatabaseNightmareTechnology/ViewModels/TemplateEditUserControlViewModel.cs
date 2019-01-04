@@ -11,13 +11,11 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// テンプレート編集
+    /// </summary>
     class TemplateEditUserControlViewModel : ViewModelBase
     {
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private TemplateEditUserControlModel Model;
-
         #region ReactiveProperty
         /// <summary>
         /// 生成ファイル名(Razor可)
@@ -40,21 +38,12 @@ namespace DatabaseNightmareTechnology.ViewModels
         public ReactiveProperty<string> TemplateBody { get; }
 
         /// <summary>
-        /// 保存結果
-        /// </summary>
-        public ReactiveProperty<string> SaveResult { get; }
-
-        /// <summary>
         /// ファイルリスト
         /// </summary>
         public ReadOnlyReactiveCollection<string> FileList { get; private set; }
         #endregion
 
         #region Command
-        /// <summary>
-        /// 表示したときの処理
-        /// </summary>
-        public ReactiveCommand Activate { get; }
         /// <summary>
         /// 保存ボタン処理
         /// </summary>
@@ -66,31 +55,27 @@ namespace DatabaseNightmareTechnology.ViewModels
         #endregion
 
         public TemplateEditUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("TemplateEditUserControlViewModel", loggerFacade)
+            : base(new TemplateEditUserControlModel(), "テンプレート編集", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new TemplateEditUserControlModel();
+            var model = Model as TemplateEditUserControlModel;
 
             #region 値の連動設定
-            GenerateFileName = Model.ToReactivePropertyAsSynchronized(
+            GenerateFileName = model.ToReactivePropertyAsSynchronized(
                 m => m.GenerateFileName
                 );
-            Title = Model.ToReactivePropertyAsSynchronized(
+            Title = model.ToReactivePropertyAsSynchronized(
                 m => m.Title
                 );
-            Discription = Model.ToReactivePropertyAsSynchronized(
+            Discription = model.ToReactivePropertyAsSynchronized(
                 m => m.Discription
                 );
-            TemplateBody = Model.ToReactivePropertyAsSynchronized(
+            TemplateBody = model.ToReactivePropertyAsSynchronized(
                 m => m.TemplateBody
-                );
-            SaveResult = Model.ToReactivePropertyAsSynchronized(
-                m => m.ActionResult
                 );
             #endregion
 
             #region リストの連動設定
-            FileList = Model.FileList.ToReadOnlyReactiveCollection();
+            FileList = model.FileList.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -103,7 +88,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 async d =>
                 {
                     Log.Log($"ファイルを保存", Category.Info, Priority.None);
-                    await Model.Save();
+                    await model.Save();
                 }
             );
 
@@ -113,17 +98,8 @@ namespace DatabaseNightmareTechnology.ViewModels
                 {
                     if (d != null)
                     {
-                        await Model.SelectFile(d as string);
+                        await model.SelectFile(d as string);
                     }
-                }
-            );
-
-            Activate = new ReactiveCommand(gate);
-            Activate.Subscribe(
-                async d =>
-                {
-                    Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
                 }
             );
             #endregion

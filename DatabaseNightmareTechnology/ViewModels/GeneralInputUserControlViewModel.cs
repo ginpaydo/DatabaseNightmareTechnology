@@ -4,27 +4,20 @@ using Prism.Logging;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
+    /// <summary>
+    /// 汎用入力
+    /// </summary>
     class GeneralInputUserControlViewModel : ViewModelBase, IDropTarget
     {
         /// <summary>
         /// 受付するファイル
         /// </summary>
         private readonly string Extention = ".csv";
-
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private GeneralInputUserControlModel Model;
 
         #region ReactiveProperty
 
@@ -51,10 +44,6 @@ namespace DatabaseNightmareTechnology.ViewModels
 
         #region Command
         /// <summary>
-        /// 表示したときの処理
-        /// </summary>
-        public ReactiveCommand Activate { get; }
-        /// <summary>
         /// チェック＆保存ボタン処理
         /// </summary>
         public ReactiveCommand Save { get; }
@@ -65,23 +54,22 @@ namespace DatabaseNightmareTechnology.ViewModels
         #endregion
 
         public GeneralInputUserControlViewModel(ILoggerFacade loggerFacade)
-            : base("GeneralInputUserControlViewModel", loggerFacade)
+            : base(new GeneralInputUserControlModel(), "汎用入力", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new GeneralInputUserControlModel();
+            var model = Model as GeneralInputUserControlModel;
 
             #region 値の連動設定
-            FileName = Model.ToReactivePropertyAsSynchronized(
+            FileName = model.ToReactivePropertyAsSynchronized(
                 m => m.FileName
                 );
-            SaveResult = Model.ToReactivePropertyAsSynchronized(
+            SaveResult = model.ToReactivePropertyAsSynchronized(
                 m => m.ActionResult
                 );
             #endregion
 
             #region リストの連動設定
-            FileList = Model.FileList.ToReadOnlyReactiveCollection();
-            Items = Model.Items.ToReadOnlyReactiveCollection();
+            FileList = model.FileList.ToReadOnlyReactiveCollection();
+            Items = model.Items.ToReadOnlyReactiveCollection();
             #endregion
 
             #region コマンドの動作設定
@@ -94,7 +82,7 @@ namespace DatabaseNightmareTechnology.ViewModels
                 async d =>
                 {
                     Log.Log($"ファイルを保存", Category.Info, Priority.None);
-                    await Model.Save();
+                    await model.Save();
                 }
             );
 
@@ -104,17 +92,8 @@ namespace DatabaseNightmareTechnology.ViewModels
                 {
                     if (d != null)
                     {
-                        await Model.SelectFile(d as string);
+                        await model.SelectFile(d as string);
                     }
-                }
-            );
-
-            Activate = new ReactiveCommand(gate);
-            Activate.Subscribe(
-                async d =>
-                {
-                    Log.Log($"{Name}を表示", Category.Info, Priority.None);
-                    await Model.ActivateAsync();
                 }
             );
             #endregion
@@ -136,7 +115,8 @@ namespace DatabaseNightmareTechnology.ViewModels
 
             foreach (var file in files)
             {
-                Model.DropFile(file);
+                var model = Model as GeneralInputUserControlModel;
+                model.DropFile(file);
             }
         }
         #endregion

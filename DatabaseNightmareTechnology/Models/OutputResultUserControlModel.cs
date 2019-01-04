@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseNightmareTechnology.Models
 {
-    class OutputResultUserControlModel : ModelBase
+    public class OutputResultUserControlModel : ModelBase
     {
         #region Fields
         /// <summary>

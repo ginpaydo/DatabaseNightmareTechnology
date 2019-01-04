@@ -1,26 +1,19 @@
 ﻿using DatabaseNightmareTechnology.Models;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using System.ComponentModel;
 using System;
 using Prism.Regions;
-using Unity;
 using Prism.Logging;
 
 namespace DatabaseNightmareTechnology.ViewModels
 {
     /// <summary>
     /// メインウィンドウ
-    /// 各ページを表示する
+    /// 各ユーザコントロールを表示する
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private
-        /// <summary>
-        /// POCO
-        /// </summary>
-        private MainWindowModel Model;
-
         /// <summary>
         /// 各画面表示領域
         /// </summary>
@@ -69,14 +62,14 @@ namespace DatabaseNightmareTechnology.ViewModels
         public ReactiveCommand ToOutputResult { get; }
         #endregion
 
+        #region Initialize
         public MainWindowViewModel(IRegionManager regionManager, ILoggerFacade loggerFacade)
-            : base("MainWindowViewModel", loggerFacade)
+            : base(new MainWindowModel(), "メインウィンドウ", loggerFacade)
         {
-            // Modelクラスを初期化
-            Model = new MainWindowModel();
+            var model = Model as MainWindowModel;
 
             #region 値の連動設定
-            Title = Model.ToReactivePropertyAsSynchronized(
+            Title = model.ToReactivePropertyAsSynchronized(
                 m => m.Title   // モデルとの対応付け
                 ).ToReadOnlyReactiveProperty();
             #endregion
@@ -145,5 +138,6 @@ namespace DatabaseNightmareTechnology.ViewModels
             #endregion
 
         }
+        #endregion
     }
 }
