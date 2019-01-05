@@ -1,0 +1,27 @@
+﻿★対象,App.xaml,App.xaml.cs,Constants,
+★全体設定,値,,,
+AppName,DatabaseNightmareTechnology,,,
+AppNameDisplay,Database Nightmare Technology,,,
+MaterialColor,Indigo,Red,基本色、警告色,
+ConstantsClassName,ApplicationConstants,アプリケーション定義,,
+MessageConstantsClassName,MessageConstants,メッセージ定義,,
+★画面定義,画面クラス名（出来るだけ他と被らない2単語以上の名前つけた方がよさそう）,画面名,最初に表示する画面を一番上に書くこと,
+UserControl#1,Home,Home,,
+UserControl#2,DropboxSettings,Dropbox設定,,
+UserControl#3,ConnectionRegister,接続先登録,,
+UserControl#4,Generate,メタデータ生成,,
+UserControl#5,TemplateEdit,テンプレート編集,,
+UserControl#6,GeneralInput,汎用入力,,
+UserControl#7,SourceGenerate,ソース生成,,
+UserControl#8,OutputResult,出力結果,,
+★定数,定数名,コメント,型,値
+Constants#16,ApplicationDirectoryLocal,アプリケーションディレクトリ（ローカル）,string,D:/DNT
+Constants#17,ApplicationDirectoryDropbox,アプリケーションディレクトリ（共通の相対パス）,string,/DNT
+Constants#18,ConnectionDirectory,接続先ファイル保存ディレクトリ（共通の相対パス）,string,/Connection
+Constants#19,MetaDataDirectory,メタデータファイル保存ディレクトリ（共通の相対パス）,string,/MetaData
+★メッセージ定数,定数名,コメント,値,
+Messages#1,ActionResult,処理結果表示場所,処理結果がここに表示されるんだぜ。,
+Messages#2,ActionSucceed,処理成功,処理に成功した。やったぜ。,
+Messages#3,NotInputFilename,未入力,…おい、タイトルを入力してくれよ保存できねぇだろ？,
+Messages#4,SaveDataNotFound,設定ファイル未作成,設定ファイルがないぜ。先に設定を完了させてくれよな！,
+Messages#5,NotChooseTemplate,テンプレート非選択,テンプレートはちゃんと選んでくれよな！,

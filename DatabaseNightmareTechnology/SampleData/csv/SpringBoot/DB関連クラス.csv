@@ -1,0 +1,7 @@
+﻿package,org.ginpaydo
+data#aaaa,valuea
+data#bbbb,valueb
+data#cccc,value1
+bigint,Long
+varchar,String
+int,BigDecimal

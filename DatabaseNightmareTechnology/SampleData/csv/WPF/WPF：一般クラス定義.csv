@@ -1,0 +1,17 @@
+﻿★全体設定,,,,,,,,
+AppName,DatabaseNightmareTechnology,,,,,,,
+ClassName,SampleData,サンプルデータ,,,,,,
+★フィールド定義,変数名,型,getアクセサ,setアクセサ(privateを書くとprivateになる),初期値(インスタンス作成の場合はnewを書く),コメント,,
+Field#1,Separator,const char,,,'#',区切り文字,,
+Field#2,DatabaseEngine,DatabaseEngine,1,private,,対象データベース,,
+Field#3,ConnectionString,string,1,1,,接続文字列,,
+Field#4,PrefixList,ObservableCollection<string>,1,,new,プレフィクスのリスト,,
+Field#5,CommonColumnList,ObservableCollection<string>,1,,new,共通項目のリスト,,
+★メソッド,アクセス修飾子,型,名前,戻り値の内容,コメント,,,
+Methods#11,public,,SampleData,,サンプルデータ,,,
+Methods#12,public,string,ReadRawData,なんだろう？,データを読み込む,,,
+★メソッド引数,型,名前,コメント,デフォルト引数,型,名前,コメント,デフォルト引数
+Arguments#12,string,discordUserId,購入希望者のId,,string,authorityId,購入対象のId,1234
+★メソッド内記述（実装メモなど）,,,,,,,,
+Free#11,記述1,記述2,,,,,,
+Free#12,まず、こうします,次に、ああします,はいできあがり,,,,,

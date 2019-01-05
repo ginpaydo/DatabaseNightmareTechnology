@@ -189,6 +189,48 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="SampleData\csv\SpringBoot\DB関連クラス.csv" />
+    <None Include="SampleData\csv\SpringBoot\アプリケーション設定.csv" />
+    <None Include="SampleData\csv\SpringBoot\システム定数.csv" />
+    <None Include="SampleData\csv\SpringBoot\メッセージ定数.csv" />
+    <None Include="SampleData\csv\SpringBoot\一般クラス定義.csv" />
+    <None Include="SampleData\csv\WPF\WPF：アプリ全体設定と定数設定.csv" />
+    <None Include="SampleData\csv\WPF\WPF：一般クラス定義.csv" />
+    <None Include="SampleData\csv\WPF\WPF：画面定義.csv" />
+    <None Include="SampleData\GeneralInput\SpringBoot\DB関連クラス.dat" />
+    <None Include="SampleData\GeneralInput\SpringBoot\アプリケーション設定.dat" />
+    <None Include="SampleData\GeneralInput\SpringBoot\システム定数クラス.dat" />
+    <None Include="SampleData\GeneralInput\SpringBoot\メッセージ定数クラス.dat" />
+    <None Include="SampleData\GeneralInput\SpringBoot\任意のクラス.dat" />
+    <None Include="SampleData\GeneralInput\WPF\WPF：アプリ全体設定と定数設定.dat" />
+    <None Include="SampleData\GeneralInput\WPF\WPF：クラス生成.dat" />
+    <None Include="SampleData\GeneralInput\WPF\WPF：画面定義.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBootTemplate.zip" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：AbstractEntity【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：application.yml【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：build.gradle【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：Entity.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：Repository.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：Service.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：メッセージ定数クラス【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：メッセージ定数ファイル【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：ログ設定【値不要】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：任意のクラス【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：定数クラス【単】.dat" />
+    <None Include="SampleData\Template\SpringBoot\SpringBoot：設定クラス【単】.dat" />
+    <None Include="SampleData\Template\WPF\WPF：App.xaml.cs.dat" />
+    <None Include="SampleData\Template\WPF\WPF：App.xaml.dat" />
+    <None Include="SampleData\Template\WPF\WPF：ApplicationConstants.cs.dat" />
+    <None Include="SampleData\Template\WPF\WPF：MainWindowModel.dat" />
+    <None Include="SampleData\Template\WPF\WPF：MainWindowView.dat" />
+    <None Include="SampleData\Template\WPF\WPF：MainWindowViewModel.dat" />
+    <None Include="SampleData\Template\WPF\WPF：MessageConstants.cs.dat" />
+    <None Include="SampleData\Template\WPF\WPF：ModelBase%28Dropbox%29.dat" />
+    <None Include="SampleData\Template\WPF\WPF：ViewModelBase.dat" />
+    <None Include="SampleData\Template\WPF\WPF：一般Model生成.dat" />
+    <None Include="SampleData\Template\WPF\WPF：一般ViewModel生成.dat" />
+    <None Include="SampleData\Template\WPF\WPF：一般View生成.dat" />
+    <None Include="SampleData\Template\WPF\WPF：一般クラス生成.dat" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dropbox.Api">

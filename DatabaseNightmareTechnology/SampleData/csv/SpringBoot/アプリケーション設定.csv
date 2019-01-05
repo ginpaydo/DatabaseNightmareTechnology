@@ -1,0 +1,15 @@
+﻿package,org.ginpaydo,,,,,
+class,application-dev,検証系,,,,
+constants#1,0,PayPalの設定,PaypalConfig,paypal,,値無し
+constants#2,1,API ID,String,clientId,ATPZa,値無し
+constants#3,1,API Secret,String,clientSecret,EFyJo,値無し
+constants#4,1,mode,String,mode,sandbox,値無し
+constants#5,1,PayPal webhookのservlet受信用エンドポイント設定$公開サーバを決定した後にPayPalのdeveloper画面で設定する,WebhookConfig,webhook,,値無し
+constants#6,2,エンドポイント,String,endpoint,/country/*,値無し
+constants#7,2,PayPalのdeveloper画面で設定したWebhookのID,String,id,08650503CA0672027,値無し
+constants#8,1,商業設定,MerchantPreferencesConfig,merchantPreferences,,値無し
+constants#9,2,B-Trader購入画面のチャンネル名の長さ制限,int,displayNameLength,64,値無し
+constants#10,2,支払間隔,int,frequencyInterval,30,値無し
+constants#11,0,Discordの設定,DiscordConfig,discord,,値無し
+constants#12,1,Bot トークンID,String,clientId,NDgzO,値無し
+constants#13,1,退会後再加入禁止期間（日）,int,prohibitDays,15,値無し

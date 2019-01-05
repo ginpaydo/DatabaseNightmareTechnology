@@ -1,0 +1,12 @@
+﻿classname,SampleClass,,,,,,,
+package,org.ginpaydo.domain.logic;,,,,,,,
+comment,サンプルクラス,,,,,,,
+annotation,@RestController$@RequiredArgsConstructor$@CommonsLog,,,,,,,
+field#11,private final,DiscordUserService,discordUserService,Discord設定,;,@Autowired,特記無し,
+field#12,private,PayPalConfig,payPalConfig,PayPal設定,;,@Autowired,特記無し,
+field#13,private,MessageSource,msg,メッセージリソース,;,@Autowired,特記無し,
+method#1,public,String,getAuthorityList,一覧を取得する,string.Empty;,一覧,"@RequestMapping(value = ""/getAuthorityList"")",特記無し
+method#2,public,String,purchase,購入の要求を行う,string.Empty;,購入URL,"@RequestMapping(value = ""/purchase"")$@Transactional(rollbackFor = Exception.class)",特記無し
+arguments#2,"@RequestParam(defaultValue = """")",String,discordUserId,購入希望者のId,,String,authorityId,購入対象のId
+free#1,記述1,記述2,,,,,,
+free#2,記述3,記述4,記述5,,,,,
