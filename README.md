@@ -1,0 +1,2 @@
+# DatabaseNightmareTechnology
+WPF,Prism.Unity製、データベースからテーブルやカラムの情報を取得し、ソース生成に使用するデータを作成。
