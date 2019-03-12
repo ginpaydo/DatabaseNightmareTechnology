@@ -41,7 +41,7 @@ Dropboxが使えるようになっていますが、ローカルのみでも使�
 ## 著者
 * **Ginpaydo** - *原著者* - [Ginpaydo](https://github.com/ginpaydo)  
 
-このプロジェクトへの[貢献者](https://github.com/ginpaydo/project/contributors)のリストもご覧ください。
+このプロジェクトへの[貢献者](https://github.com/ginpaydo/DatabaseNightmareTechnology/contributors)のリストもご覧ください。
 ## ライセンス
 このプロジェクトは MIT ライセンスの元にライセンスされています。 詳細は[LICENSE.md](LICENSE.md)をご覧ください。
 ## 謝辞
