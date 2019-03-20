@@ -1,0 +1,15 @@
+﻿DBとは関係ない一般的クラスの定義,,,,,,
+★全体設定,,,,,,
+ClassName,Parameter,とりっっちのパラメータ,,,,
+★フィールド定義,変数名(PascalCase:アクセサに使用),変数名(camelCase),型,getアクセサ,setアクセサ(privateを書くとprivateになる),コメント
+Field#1,Id,id,number,,,区切り文字
+Field#2,Name,name,string,1,,対象データベース
+Field#3,Value,value,string,1,1,接続文字列
+★メソッド（コンストラクタはコメント以外空にする、オバロ非対応なので設計時に避けること）,"アクセス修飾子（つけない場合は""1""）",型,名前(PascalCase),戻り値の内容,コメント,
+Methods#11,1,,,,とりっっちのパラメータ,
+Methods#12,public,number,Method1,なんだろう？,データを読み込む,
+★メソッド引数,型1,名前1,コメント1,型2,名前2,コメント2
+Arguments#12,string,discordUserId,購入希望者のId,string,authorityId,購入対象のId
+★メソッド内記述（実装メモなど）,,,,,,
+Free#11,記述1,記述2,,,,
+Free#12,まず、こうします,次に、ああします,return result;,,,

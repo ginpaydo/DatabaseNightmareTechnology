@@ -1,0 +1,11 @@
+﻿a,0,1,2,3,4,5,6,7,8,9,10,11,12
+★全体設定,,,,,,,,,,,,,
+ClassName,Parameter,とりっっちのパラメータ,parameter,,,,,,,,,,
+TableName,Parameter,とりっっちのパラメータ,parameter,,,,,,,,,,
+★フィールド定義,変数名(基本的にcamelCase),型,DB変数,DB型（intとかのTS型で指定。INTEGERはダメ。）,PK,ManyToOneクラス名（参照カラムはid固定）,nullable,length（stringのみ）,default値,unique,readonly,"date(1:create, 2:update)",コメント（SQLiteには反映されない）
+Field#1,id,number,id,int,1,,,,,,,,通し番号
+Field#2,name,string,name,text,,,,50,ななし,1,,,名前
+Field#3,value,string,value,text,,,,100,あたい,,,,値
+Field#4,user,User,user_id,int,,User,1,,,,,,ユーザー
+Field#5,createdAt,Date,created_at,date,,,,,,,1,1,作成日
+Field#6,updatedAt,Date,updated_at,date,,,,,,,1,2,更新日
